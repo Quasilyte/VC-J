@@ -1,10 +1,10 @@
-package vc.lang.impl.tokens;
+package vc.lang.impl;
 
 import java.util.ArrayDeque;
 
 import vc.lang.types.Token;
 
-public class Tokenizer {
+class Tokenizer {
     private ArrayDeque<Token> tokens;
     private Token lastPopped;
 

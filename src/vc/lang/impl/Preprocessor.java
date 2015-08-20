@@ -1,4 +1,4 @@
-package vc.lang.impl.tokens;
+package vc.lang.impl;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;

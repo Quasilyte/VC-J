@@ -2,7 +2,6 @@ package vc.lang.impl;
 
 import vc.lang.types.*;
 import vc.lang.runtime.*;
-import vc.lang.impl.tokens.*;
 
 /**
  * High level Scanner which iterates over token sequence,
@@ -10,7 +9,7 @@ import vc.lang.impl.tokens.*;
  * Most job done by helper classes, so this one can be 
  * represent good high level view of parsing process.
  */
-public class Interpreter {
+public class Interpreter implements EvaluationContext {
     private Tokenizer tokenizer = new Tokenizer();
     private DataStack stack = new DataStack();
     
@@ -20,16 +19,20 @@ public class Interpreter {
     
     public void eval() throws Exception {
 	while (tokenizer.hasTokens()) {
-	    collectResult(tokenizer.nextToken().eval());
+	    tokenizer.nextToken().evalInsideContext(this);
 	}
 	
 	System.out.println(stack.toString());
     }
+    
+    @Override
+    public Tokenizer getTokenizer() {
+	return tokenizer;
+    }
 
-    public void collectResult(Evaluable result) {
-	if (result != null) {
-	    result.populate(tokenizer, stack);
-	}
+    @Override
+    public DataStack getDataStack() {
+	return stack;
     }
 }
 

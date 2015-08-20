@@ -1,7 +1,6 @@
 package vc.lang.types;
 
-import vc.lang.impl.tokens.Tokenizer;
-import vc.lang.runtime.DataStack;
+import vc.lang.impl.EvaluationContext;
 
 public class Raw extends Token<String> {
     public Raw(String value) {
@@ -9,13 +8,13 @@ public class Raw extends Token<String> {
     }
     
     @Override
-    public Evaluable eval() {
-	return this;
-    }
+    public void evalInsideContext(EvaluationContext context) {
+	Box box = Box.create(value);
 
-    @Override
-    public void populate(Tokenizer tokenizer, DataStack stack) {
-	// Mockup.
-	System.out.printf("`%s' do not want to populate anything\n", value);
+	if (box == null) { // Not a box literal, must be a word to execute
+	    System.out.printf("`%s' do not want to populate anything\n", value);
+	} else { // Box scalar; collect it
+	    context.getDataStack().push(box);
+	}
     }
 }
