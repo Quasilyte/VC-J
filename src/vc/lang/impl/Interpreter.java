@@ -20,23 +20,15 @@ public class Interpreter {
     
     public void eval() throws Exception {
 	while (tokenizer.hasTokens()) {
-	    evalToken(tokenizer.nextToken());
+	    collectResult(tokenizer.nextToken().eval());
 	}
 	
 	System.out.println(stack.toString());
     }
 
-    public void executeWord(String token) {
-	System.out.printf("executing `%s'\n", token);
-    }
-
-    public void evalToken(String token) throws Exception {
-	Box box = Box.create(token);
-
-	if (box == null) { // Not a box literal, must be a word to execute
-	    executeWord(token);
-	} else { // Box scalar; collect it
-	    stack.push(box);
+    public void collectResult(Evaluable result) {
+	if (result != null) {
+	    result.populate(tokenizer, stack);
 	}
     }
 }

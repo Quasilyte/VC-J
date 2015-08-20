@@ -2,41 +2,43 @@ package vc.lang.impl.tokens;
 
 import java.util.ArrayDeque;
 
+import vc.lang.types.Token;
+
 public class Tokenizer {
-    private ArrayDeque<String> parts;
-    private String lastPopped;
+    private ArrayDeque<Token> tokens;
+    private Token lastPopped;
 
     public void resetWith(String input) {
-	parts = new ArrayDeque<String>(Preprocessor.preprocess(input));
+	tokens = new ArrayDeque<Token>(Preprocessor.preprocess(input));
 	
 	lastPopped = null;
     }
 
-    public void insertTokens(String[] newTokens) {
-	for (String newToken : newTokens) {
-	    parts.push(newToken);
+    public void insertTokens(Token[] newTokens) {
+	for (Token newToken : newTokens) {
+	    tokens.push(newToken);
 	}
     }
 
     public boolean hasTokens() {
-	return !parts.isEmpty();
+	return !tokens.isEmpty();
     }
    
-    public String nextToken() {
-	lastPopped = parts.pop();
+    public Token nextToken() {
+	lastPopped = tokens.pop();
 
 	return lastPopped;
     }
     
-    public String currentToken() {
+    public Token currentToken() {
 	return lastPopped;
     }
 
     public void dump() {
 	System.out.print("dumping: <top ");
 
-	for (String part : parts) {
-	    System.out.printf("[%s] ", part);
+	for (Token token : tokens) {
+	    System.out.printf("[%s] ", token);
 	}
 	
 	System.out.println(">");

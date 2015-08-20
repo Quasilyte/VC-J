@@ -1,21 +1,24 @@
 package vc.lang.impl.tokens;
 
+import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
+
+import vc.lang.types.Token;
+import vc.lang.types.Raw;
 
 abstract class Preprocessor {
     private static final HashMap<Character, String> substitutionTable;
     static {
         substitutionTable = new HashMap<Character, String>();
 
-	// To be sure we can see those tokens separately by Scanner
+	// To be sure we can see those tokens separately
 	for (Character token : new Character[] { '[', ']' } ) {
 	    substitutionTable.put(token, " " + token + " ");
 	}
     }
     
-    public static List<String> preprocess(String input) {
+    public static ArrayDeque<Token> preprocess(String input) {
 	boolean insideString = false;
 	StringBuilder output = new StringBuilder();
 
@@ -33,8 +36,21 @@ abstract class Preprocessor {
 	    }
 	}
 
-	// I think it is possible to build appropriate array above,
-	// but for now this solution will do.
-	return Arrays.asList(output.toString().split("\\s+"));
+	return makeTokens(output.toString());
+    }
+
+    /**
+     * @todo optimize me! Should assemble resulting deque inside
+     * callee for loop. Need precise benchmarks though.
+     */
+    private static ArrayDeque<Token> makeTokens(String output) {
+	String[] parts = output.toString().split("\\s+");
+	ArrayDeque<Token> tokens = new ArrayDeque<Token>(parts.length);
+	
+	for (String part : parts) {
+	    tokens.push(new Raw(part));
+	}
+
+	return tokens;
     }
 }
