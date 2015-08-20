@@ -1,0 +1,24 @@
+#!/bin/bash
+
+delimeter() {
+    echo "----------------------------------------------------\\"
+    echo -e "\t[[ $1 ]]"
+    echo "----------------------------------------------------/"
+}
+
+delimeter "BUILD"
+
+destination="./bin"
+target_name="Test"
+target_src=$target_name'.java'
+
+javac \
+  -sourcepath ./src \
+  -d "./bin" \
+  $target_src
+
+if [[ $? = "0" ]]; then
+    clear
+    delimeter "RUN"
+    java -classpath $destination $target_name
+fi;
