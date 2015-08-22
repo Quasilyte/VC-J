@@ -1,12 +1,12 @@
-package vc.lang.impl.dict;
+package vc.lang.impl.deck;
 
 import vc.lang.impl.EvaluationContext;
 
-public class BuiltinDictionary extends Dictionary<ExecutableWord> {
-    public BuiltinDictionary() {
+public class BuiltinDeck extends Deck<ExecutableCard> {
+    public BuiltinDeck() {
 	allocate(1);
 	
-	register("xx", this::hello);
+	insertCard("xx", this::hello);
     }
 
     public void hello(EvaluationContext context) {

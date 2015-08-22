@@ -1,10 +1,14 @@
 package vc.lang.impl;
 
 import vc.lang.runtime.DataStack;
-import vc.lang.impl.dict.BuiltinDictionary;
+import vc.lang.impl.deck.BuiltinDeck;
 
-public interface EvaluationContext {
-    public Tokenizer getTokenizer();
-    public DataStack getDataStack();
-    public BuiltinDictionary getBuiltinDictionary();
+public abstract class EvaluationContext {
+    protected Tokenizer tokenizer = new Tokenizer();
+    protected DataStack stack = new DataStack();
+    protected BuiltinDeck builtins = new BuiltinDeck();
+    
+    public abstract Tokenizer getTokenizer();
+    public abstract DataStack getDataStack();
+    public abstract BuiltinDeck getBuiltinDeck();
 }

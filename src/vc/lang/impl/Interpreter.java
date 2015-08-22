@@ -2,19 +2,9 @@ package vc.lang.impl;
 
 import vc.lang.types.*;
 import vc.lang.runtime.*;
-import vc.lang.impl.dict.BuiltinDictionary;
+import vc.lang.impl.deck.BuiltinDeck;
 
-/**
- * High level Scanner which iterates over token sequence,
- * performing evaluation and accumulates result in data Stack.
- * Most job done by helper classes, so this one can be 
- * represent good high level view of parsing process.
- */
-public class Interpreter implements EvaluationContext {
-    private Tokenizer tokenizer = new Tokenizer();
-    private DataStack stack = new DataStack();
-    private BuiltinDictionary builtins = new BuiltinDictionary();
-    
+public class Interpreter extends EvaluationContext {
     public Interpreter(String input) {
 	tokenizer.resetWith(input);
     }
@@ -38,7 +28,7 @@ public class Interpreter implements EvaluationContext {
     }
 
     @Override
-    public BuiltinDictionary getBuiltinDictionary() {
+    public BuiltinDeck getBuiltinDeck() {
 	return builtins;
     }
 }
