@@ -8,4 +8,14 @@ public class IntNum extends Num<Integer> {
     public String toString() {
 	return String.format("Num<Integer>: `%d'", value);
     }
+
+    @Override
+    protected void wrap(double value) {
+	this.value = (int) value;
+    }
+
+    @Override
+    public double unwrap() {
+	return value.doubleValue();
+    }
 }

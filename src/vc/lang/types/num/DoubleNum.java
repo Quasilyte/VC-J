@@ -8,4 +8,14 @@ public class DoubleNum extends Num<Double> {
     public String toString() {
 	return String.format("Num<Double>: `%f'", value);
     }
+
+    @Override
+    protected void wrap(double value) {
+	this.value = value;
+    }
+
+    @Override
+    public double unwrap() {
+	return value;
+    }
 }

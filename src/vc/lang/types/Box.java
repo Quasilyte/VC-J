@@ -8,6 +8,10 @@ import vc.lang.types.vec.*;
 
 public abstract class Box<WrappedType> implements Evaluable {
     public WrappedType value;
+
+    public WrappedType unbox() {
+	return value;
+    }
     
     protected Box toNum() throws Exception {
 	return this;
@@ -19,10 +23,6 @@ public abstract class Box<WrappedType> implements Evaluable {
     
     protected Box toVec() {
 	return this;
-    }
-
-    public static Box create(String token) {
-	return BoxFactory.createBoxFrom(token);
     }
 
     @Override

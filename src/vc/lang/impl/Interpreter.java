@@ -10,8 +10,8 @@ public class Interpreter extends EvaluationContext {
     }
     
     public void eval() throws Exception {
-	while (tokenizer.hasTokens()) {
-	    tokenizer.nextToken().evalInsideContext(this);
+	while (tokenizer.hasMore()) {
+	    tokenizer.nextEvaluable().evalInsideContext(this);
 	}
 	
 	System.out.println(stack.toString());

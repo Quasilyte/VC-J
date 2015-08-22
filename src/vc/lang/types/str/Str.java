@@ -11,7 +11,7 @@ public class Str extends Box<String> {
 
     @Override
     public Box toNum() throws Exception {
-        if (NumParser.canParse(value)) {
+        if (Character.isDigit(value.charAt(0))) {
 	    return NumParser.valueOf(value);
 	}
         

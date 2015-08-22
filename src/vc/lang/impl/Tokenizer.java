@@ -2,45 +2,36 @@ package vc.lang.impl;
 
 import java.util.ArrayDeque;
 
-import vc.lang.types.Token;
+import vc.lang.types.Evaluable;
 
-class Tokenizer {
-    private ArrayDeque<Token> tokens;
-    private Token lastPopped;
+public class Tokenizer {
+    private EvaluableEmitter emitter;
+    private Evaluable lastEmitted;
 
     public void resetWith(String input) {
-	tokens = new ArrayDeque<Token>(Preprocessor.preprocess(input));
-	
-	lastPopped = null;
+	emitter = new EvaluableEmitter(input);
+	lastEmitted = null;
     }
 
+    /*
     public void insertTokens(Token[] newTokens) {
 	for (Token newToken : newTokens) {
 	    tokens.push(newToken);
 	}
     }
+    */
 
-    public boolean hasTokens() {
-	return !tokens.isEmpty();
+    public boolean hasMore() {
+	return emitter.canScan();
     }
    
-    public Token nextToken() {
-	lastPopped = tokens.pop();
+    public Evaluable nextEvaluable() throws Exception {
+	lastEmitted = emitter.emit();
 
-	return lastPopped;
+	return lastEmitted;
     }
     
-    public Token currentToken() {
-	return lastPopped;
-    }
-
-    public void dump() {
-	System.out.print("dumping: <top ");
-
-	for (Token token : tokens) {
-	    System.out.printf("[%s] ", token);
-	}
-	
-	System.out.println(">");
+    public Evaluable currentEvaluable() {
+	return lastEmitted;
     }
 }
