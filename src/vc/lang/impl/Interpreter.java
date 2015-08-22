@@ -2,6 +2,7 @@ package vc.lang.impl;
 
 import vc.lang.types.*;
 import vc.lang.runtime.*;
+import vc.lang.impl.dict.BuiltinDictionary;
 
 /**
  * High level Scanner which iterates over token sequence,
@@ -12,6 +13,7 @@ import vc.lang.runtime.*;
 public class Interpreter implements EvaluationContext {
     private Tokenizer tokenizer = new Tokenizer();
     private DataStack stack = new DataStack();
+    private BuiltinDictionary builtins = new BuiltinDictionary();
     
     public Interpreter(String input) {
 	tokenizer.resetWith(input);
@@ -33,6 +35,11 @@ public class Interpreter implements EvaluationContext {
     @Override
     public DataStack getDataStack() {
 	return stack;
+    }
+
+    @Override
+    public BuiltinDictionary getBuiltinDictionary() {
+	return builtins;
     }
 }
 
