@@ -9,7 +9,11 @@ public class Test {
 	              + "three-2";
 	*/
 
-	String script = "'' if 'true' else 'false' endif 'always'";
+	// String script = "'' if 'true' else 'false' endif 'always'";
+
+	// String script = "123 str! 123.7 str!";
+	// String script = "'123' num!";
+	String script = "1 vec! [1] vec!";
 	
 	new Interpreter(script).eval();
     }

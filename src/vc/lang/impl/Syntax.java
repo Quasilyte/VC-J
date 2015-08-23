@@ -16,7 +16,9 @@ public abstract class Syntax {
 	IF_KEY = "if",
 	ELSE_KEY = "else",
 	ENDIF_KEY = "endif",
-	STR_CAST_KEY = "str!";
+	NUM_ASSERT_KEY = "num!",
+	STR_ASSERT_KEY = "str!",
+	VEC_ASSERT_KEY = "vec!";
 
     static {
 	condTermination = Pattern.compile(

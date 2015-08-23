@@ -24,24 +24,33 @@ public class Vec extends Box<Token[]> implements MetaToken, ExecutableCard {
     public Box toNum(EvaluationContext context) throws ExecException {
 	ensureNotEmpty(context);
 	
-	if (value[0].getClass() == Num.class) {
-	    return (Box) value[0];
+	if (value[0].getClass() != Num.class) {
+	    
+	context.exception("type assert failed")
+	    .details("VEC->NUM possible only when first element is NUM")
+	    .toss();
 	}
 
-	context.exception("type assert failed")
-	    .details("VEC->NUM possible only when first element is NUM").toss();
+	return (Box) value[0];
     }
 
     @Override
     public Box toStr(EvaluationContext context) throws ExecException {
 	ensureNotEmpty(context);
 	
-	if (value[0].getClass() == Str.class) {
-	    return (Box) value[0];
+	if (value[0].getClass() != Str.class) {
+	    context.exception("type assert failed")
+		.details("VEC->STR possible only when first element is STR")
+		.toss();
 	}
-	
-	context.exception("type assert failed")
-	    .details("VEC->STR possible only when first element is STR").toss();
+
+	return (Box) value[0];
+    }
+
+    
+    @Override
+    public Box toVec() {
+	return this;
     }
 
     @Override

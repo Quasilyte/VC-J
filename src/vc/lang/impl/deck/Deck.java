@@ -24,7 +24,9 @@ public class Deck {
 	cards.put(Syntax.ELSE_KEY, this::condElse);
 	cards.put(Syntax.ENDIF_KEY, this::condEndIf);
 
-	cards.put(Syntax.STR_CAST_KEY, this::strCast);
+	cards.put(Syntax.NUM_ASSERT_KEY, this::numAssert);
+	cards.put(Syntax.STR_ASSERT_KEY, this::strAssert);
+	cards.put(Syntax.VEC_ASSERT_KEY, this::vecAssert);
 	
 	cards.put("[", this::vecCollect);
 	
@@ -76,13 +78,29 @@ public class Deck {
     public void condEndIf(EvaluationContext context) {
 	// Do nothing!
     }
-
-    public void strCast(EvaluationContext context) throws ExecException {
+    
+    public void numAssert(EvaluationContext context) throws ExecException {
 	DataStack stack = context.getDataStack();
 	
 	Box top = (Box) stack.pop();
 
-	stack.push(top.toStr());
+	stack.push(top.toNum(context));
+    }
+    
+    public void strAssert(EvaluationContext context) throws ExecException {
+	DataStack stack = context.getDataStack();
+	
+	Box top = (Box) stack.pop();
+
+	stack.push(top.toStr(context));
+    }
+
+    public void vecAssert(EvaluationContext context) throws ExecException {
+	DataStack stack = context.getDataStack();
+	
+	Box top = (Box) stack.pop();
+
+	stack.push(top.toVec());
     }
 
     public void numBinOp(EvaluationContext context, BinaryOpInvoker invoker) {

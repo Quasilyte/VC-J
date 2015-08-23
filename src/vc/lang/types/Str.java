@@ -11,12 +11,17 @@ public class Str extends Box<String> implements MetaToken {
 
     @Override
     public Box toNum(EvaluationContext context) throws ExecException {
-        if (NumParser.canParse(value)) {
-	    return NumParser.valueOf(value);
+        if (!NumParser.canParse(value)) {
+	    context.exception("type assert failed")
+		.details("STR->NUM can't handle `%s'", value).toss();
 	}
 
-	context.exception("type assert failed")
-	    .details("STR->NUM can't handle `%s'", value).toss();
+	return NumParser.valueOf(value);
+    }
+
+    @Override
+    public Box toStr(EvaluationContext context) {
+	return this;
     }
 
     @Override

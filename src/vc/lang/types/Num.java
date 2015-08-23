@@ -1,5 +1,7 @@
 package vc.lang.types;
 
+import vc.lang.impl.EvaluationContext;
+
 public final class Num extends Box<Double> {             
     private static final double FRACTIONAL_THRESHOLD = 0.000001;
     
@@ -10,11 +12,22 @@ public final class Num extends Box<Double> {
     public Num(double value) {
 	this.value = value;
     }
+
+    
+    @Override
+    public Box toNum(EvaluationContext context) {
+	return this;
+    }
     
     @Override
     public Box toStr(EvaluationContext context) {
-        return new Str(String.valueOf(value));
+	if (asInt()) {
+	    return new Str(String.valueOf(value.intValue()));
+	} else {
+	    return new Str(String.valueOf(value));
+	}
     }
+    
     
     @Override
     public Box toVec() {
@@ -56,9 +69,7 @@ public final class Num extends Box<Double> {
     }
 
     public String toString() {
-	boolean asInt = (value % 1) < FRACTIONAL_THRESHOLD;
-
-	if (asInt) {
+	if (asInt()) {
 	    return String.format("Num[int]: `%d'", value.intValue());
 	} else {
 	    return String.format("Num[double]: `%f'", value);
@@ -68,6 +79,10 @@ public final class Num extends Box<Double> {
     /*
      * Private:
      */
+
+    private boolean asInt() {
+	return (value % 1) < FRACTIONAL_THRESHOLD;
+    }
 
     private Num withNewValue(double newValue) {
 	value = newValue;
