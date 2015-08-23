@@ -4,11 +4,7 @@ import java.util.ArrayList;
     
 import vc.lang.impl.*;
 import vc.lang.runtime.*;
-import vc.lang.impl.exception.SyntaxError;
 import vc.lang.types.*;
-import vc.lang.types.num.*;
-import vc.lang.types.str.Str;
-import vc.lang.types.vec.Vec;
 
 public class BuiltinDeck extends Deck<ExecutableCard> {
     private interface BinaryOpInvoker {
@@ -16,8 +12,10 @@ public class BuiltinDeck extends Deck<ExecutableCard> {
     }
     
     public BuiltinDeck() {
-	allocate(8);
+	allocate(9);
 
+	insertCard("eval", this::evalToken);
+	
 	insertCard("[", this::vecCollect);
 	
 	insertCard("+", this::numAddBinOp);
@@ -25,9 +23,16 @@ public class BuiltinDeck extends Deck<ExecutableCard> {
 	insertCard("*", this::numMulBinOp);
 	insertCard("/", this::numDivBinOp);
 	
-	insertCard("=", this::numEqBinOp);
+	insertCard("=", this::eqBinOp);
 	insertCard(">", this::numGtBinOp);
 	insertCard("<", this::numLtBinOp);
+    }
+
+    public void evalToken(EvaluationContext context) throws ExecException {
+	DataStack stack = context.getDataStack();
+
+	stack.pop().eval(context);
+	// context.getTokenizer()
     }
 
     public void numBinOp(EvaluationContext context, BinaryOpInvoker invoker) {
@@ -54,19 +59,15 @@ public class BuiltinDeck extends Deck<ExecutableCard> {
 	numBinOp(context, ((Num) context.getDataStack().pop())::div);
     }
 
-    public void numEqBinOp(EvaluationContext context) {
+    public void eqBinOp(EvaluationContext context) {
 	DataStack stack = context.getDataStack();
 	Box a = (Box) stack.pop(), b = (Box) stack.pop();
 
-	stack.push(a.eq(b));
-
-	/*
-	if (a.getClass() == b.getClass()) {
+	if (a.sameType(b)) {
 	    stack.push(a.eq(b));
 	} else {
-	    stack.push(new IntNum(0));
-	}
-	*/
+	    stack.push(new Num(0.0));
+	}	
     }
     
     public void numGtBinOp(EvaluationContext context) {
@@ -80,26 +81,26 @@ public class BuiltinDeck extends Deck<ExecutableCard> {
     public void vecCollect(EvaluationContext context) {
 	int depth = 0; // For processing nested vectors
 	Tokenizer tokenizer = context.getTokenizer();
-	ArrayList<Evaluable> elements = new ArrayList<>(6);
+	ArrayList<Token> tokens = new ArrayList<>(6);
 
 	while (true) {
 	    try {
-		Evaluable element = tokenizer.nextEvaluable();
-		
-		String symbol = element.toString();
+		Token token = tokenizer.nextToken();
+		String symbol = token.getSymbol();
 		
 		if ("[".equals(symbol)) {
 		    ++depth;
 		} else if ("]".equals(symbol)) {
 		    if (depth == 0) {
-			context.getDataStack().push(new Vec(elements));
-			return;
+			context.getDataStack().push(new Vec(tokens));
+			
+		        return;
 		    } else {
 			--depth;
 		    }
 		}
 
-		elements.add(element);
+		tokens.add(token);
 	    } catch (Exception e) {}
 	}
     }

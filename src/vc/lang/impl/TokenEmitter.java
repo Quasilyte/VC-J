@@ -1,20 +1,18 @@
 package vc.lang.impl;
 
-import vc.lang.types.num.NumParser;
-import vc.lang.types.num.Num;
-import vc.lang.types.str.Str;
-import vc.lang.types.Token;
-import vc.lang.types.Evaluable;
+import vc.lang.types.*;
 
-public class EvaluableEmitter {
+public class TokenEmitter {
     private interface BytePredicate {
 	public boolean test(Byte value);
     }
+
+    public int line = 1;
     
     private int lpos = 0, rpos = 0;
     private byte buf[];
     
-    public EvaluableEmitter(String input) {
+    public TokenEmitter(String input) {
 	buf = input.getBytes();
 	skipWhile(Character::isWhitespace);
     }
@@ -23,17 +21,19 @@ public class EvaluableEmitter {
 	return rpos < buf.length;
     }
 
-    public Evaluable emit() throws Exception {
-	Evaluable result = fetchEvaluable();
+    public Token emit() throws Exception {
+	Token token = fetchToken();
 
 	skipWhile(Character::isWhitespace);
 	
-	return result;
+	return token;
     }
 
     private void skipWhile(BytePredicate proceedPredicate) {
 	while (canScan() && proceedPredicate.test(buf[rpos])) {
-	    ++rpos;
+	    if (buf[rpos++] == '\n') {
+		++line;
+	    }
 	}
     }
 
@@ -41,20 +41,20 @@ public class EvaluableEmitter {
 	return new String(buf, from, len);
     }
     
-    private Evaluable fetchEvaluable() throws Exception {
+    private Token fetchToken() throws Exception {
 	switch (buf[rpos]) {
 	case '\'':
 	    return fetchQuoted();
 	    
 	case '[':
-	    return new Token(slice(rpos++, 1));
+	    return new Function(slice(rpos++, 1));
 	    
 	default:
 	    return fetch();
 	}
     }
 
-    private Evaluable fetchQuoted() throws Exception {
+    private Token fetchQuoted() throws Exception {
 	try {
 	    lpos = ++rpos; // Step over first quote
 	   
@@ -67,13 +67,13 @@ public class EvaluableEmitter {
 	}
     }
     
-    private Evaluable fetch() {
+    private Token fetch() {
 	lpos = rpos;
 	skipWhile((c) -> { return !Character.isWhitespace(c); });
 	
 	if (buf[rpos - 1] == ']') {
 	    if ((rpos - lpos) == 1) { // Single bracket -- valid token
-		return new Token("]"); 
+		return new Function("]"); 
 	    } else {
 		--rpos; // We need this bracket to be separate token
 	    }
@@ -81,11 +81,11 @@ public class EvaluableEmitter {
 	
 	String symbol = slice(lpos, rpos - lpos);
 
-	// Symbol can represent a number
-	Num num = NumParser.valueOf(symbol);
-
-	return num == null ? new Token(symbol) : num;
-	
+	if (NumParser.canParse(symbol)) {
+	    return NumParser.valueOf(symbol);
+	} else {
+	    return new Function(symbol);
+	}
     }
 }
 

@@ -1,13 +1,20 @@
 package vc.lang.types;
 
 import vc.lang.impl.EvaluationContext;
+import vc.lang.runtime.ExecException;
 
-import vc.lang.types.num.*;
-import vc.lang.types.str.*;
-import vc.lang.types.vec.*;
-
-public abstract class Box<WrappedType> implements Evaluable {
+public abstract class Box<WrappedType> extends Token {
     public WrappedType value;
+    
+    @Override
+    public void eval(EvaluationContext context) throws ExecException {
+	context.getDataStack().push(this);
+    }
+
+    @Override
+    public String getSymbol() {
+	return null;
+    }
     
     public Box toNum() throws Exception {
 	return this;
@@ -21,15 +28,8 @@ public abstract class Box<WrappedType> implements Evaluable {
 	return this;
     }
 
-    public Box eq(Box otherBox) {
-	return new IntNum(sameValue(otherBox) ? -1 : 0);
-    }
-
-    public abstract boolean sameValue(Evaluable x);
-
-    @Override
-    public void evalInsideContext(EvaluationContext context) {
-	context.getDataStack().push(this);
+    public Box eq(Box other) {
+	return new Num(sameValue(other) ? -1.0 : 0.0);
     }
 }
 

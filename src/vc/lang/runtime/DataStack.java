@@ -24,15 +24,17 @@ public class DataStack {
     }
 
     public String toString() {
-	StringBuilder dump = new StringBuilder("DataStack dump: {\n");
-
-	dump.append("<top>");
+	if (boxes.isEmpty()) {
+	    return "Stack: <empty>";
+	} 
+	
+	StringBuilder dump = new StringBuilder();
+	dump.append(String.format("Stack[len=%d]: {\n<top>", boxes.size()));
+	
 	while (boxes.size() > 0) {
 	    dump.append("\t").append(boxes.pop().toString()).append("\n");
 	}
 
-	dump.append("}");
-
-	return dump.toString();
+	return dump.append("}").toString();
     }
 }

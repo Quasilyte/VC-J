@@ -1,8 +1,6 @@
-package vc.lang.types.str;
+package vc.lang.types;
 
 import vc.lang.types.*;
-import vc.lang.types.num.*;
-import vc.lang.types.vec.*;
 
 public class Str extends Box<String> {
     public Str(String value) {
@@ -24,11 +22,14 @@ public class Str extends Box<String> {
     }
 
     @Override
-    public boolean sameValue(Evaluable x) {
-	return ((Str) x).value.equals(value);
+    public boolean sameValue(Token other) {
+	return ((Str) other).value.equals(value);
     }
 
     public String toString() {
-	return String.format("Str[len=%d]: `%s'", value.length(), value);
+	return String.format(
+	    "Str[len=%d]: `%s'", value.length(),
+	    (value.length() > 60) ? value.substring(0, 60) + "..." : value
+	);
     }
 }

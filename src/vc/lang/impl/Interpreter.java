@@ -10,8 +10,9 @@ public class Interpreter extends EvaluationContext {
     }
     
     public void eval() throws Exception {
-	while (tokenizer.hasMore()) {
-	    tokenizer.nextEvaluable().evalInsideContext(this);
+	while (tokenizer.hasTokens()) {
+	    // Interpreter is passed as EvaluationContext
+	    tokenizer.nextToken().eval(this);
 	}
 	
 	System.out.println(stack.toString());
@@ -30,6 +31,15 @@ public class Interpreter extends EvaluationContext {
     @Override
     public BuiltinDeck getBuiltinDeck() {
 	return builtins;
+    }
+
+    @Override
+    public ExecExceptionBuilder exception(String msg) {
+	String contextInfo = String.format(
+	    "line: %d", tokenizer.line()
+	);
+	
+	return new ExecExceptionBuilder(contextInfo, msg);
     }
 }
 

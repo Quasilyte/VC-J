@@ -1,35 +1,16 @@
 package vc.lang.types;
 
-import java.util.HashMap;
-
-import vc.lang.types.num.NumParser;
 import vc.lang.impl.EvaluationContext;
-import vc.lang.impl.deck.ExecutableCard;
+import vc.lang.runtime.ExecException;
 
-public class Token implements Evaluable {
-    private String symbol;
+public abstract class Token {
+    public abstract void eval(EvaluationContext context) throws ExecException;
     
-    public Token(String symbol) {
-	this.symbol = symbol;
-    }
+    public abstract boolean sameValue(Token other);
+
+    public abstract String getSymbol();
     
-    @Override
-    public void evalInsideContext(EvaluationContext context) {
-	ExecutableCard card = context.getBuiltinDeck().getCard(symbol);
-	
-	if (card == null) {
-	    System.out.printf("`%s' do not want to populate anything\n", symbol);
-	} else {
-	    card.execute(context);
-	}
-    }
-
-    @Override
-    public boolean sameValue(Evaluable x) {
-	return ((Token) x).toString().equals(symbol);
-    }
-
-    public String toString() {
-	return symbol;
+    public final boolean sameType(Token other) {
+	return getClass() == other.getClass();
     }
 }

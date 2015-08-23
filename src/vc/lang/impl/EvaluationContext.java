@@ -1,6 +1,6 @@
 package vc.lang.impl;
 
-import vc.lang.runtime.DataStack;
+import vc.lang.runtime.*;
 import vc.lang.impl.deck.BuiltinDeck;
 
 public abstract class EvaluationContext {
@@ -11,4 +11,6 @@ public abstract class EvaluationContext {
     public abstract Tokenizer getTokenizer();
     public abstract DataStack getDataStack();
     public abstract BuiltinDeck getBuiltinDeck();
+
+    public abstract ExecExceptionBuilder exception(String msg);
 }
