@@ -1,5 +1,7 @@
 package vc.lang.types.num;
 
+import vc.lang.types.Box;
+
 public class IntNum extends Num<Integer> {
     public IntNum(Integer value) {
 	this.value = value;

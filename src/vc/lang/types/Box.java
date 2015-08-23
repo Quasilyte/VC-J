@@ -8,22 +8,24 @@ import vc.lang.types.vec.*;
 
 public abstract class Box<WrappedType> implements Evaluable {
     public WrappedType value;
+    
+    public Box toNum() throws Exception {
+	return this;
+    }
+    
+    public Box toStr() throws Exception {
+	return this;
+    }
+    
+    public Box toVec() {
+	return this;
+    }
 
-    public WrappedType unbox() {
-	return value;
+    public Box eq(Box otherBox) {
+	return new IntNum(sameValue(otherBox) ? -1 : 0);
     }
-    
-    protected Box toNum() throws Exception {
-	return this;
-    }
-    
-    protected Box toStr() throws Exception {
-	return this;
-    }
-    
-    protected Box toVec() {
-	return this;
-    }
+
+    public abstract boolean sameValue(Evaluable x);
 
     @Override
     public void evalInsideContext(EvaluationContext context) {

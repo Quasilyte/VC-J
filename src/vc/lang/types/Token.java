@@ -24,6 +24,11 @@ public class Token implements Evaluable {
 	}
     }
 
+    @Override
+    public boolean sameValue(Evaluable x) {
+	return ((Token) x).toString().equals(symbol);
+    }
+
     public String toString() {
 	return symbol;
     }

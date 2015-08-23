@@ -39,8 +39,9 @@ public abstract class Num<WrappedType> extends Box<WrappedType> {
 	return this;
     }
 
-    public Num eq(Num otherNum) {
-	return new IntNum(cmp(otherNum) == 0 ? -1 : 0);
+    @Override
+    public boolean sameValue(Evaluable x) {
+	return cmp((Num) x) == 0;
     }
     
     public Num gt(Num otherNum) {

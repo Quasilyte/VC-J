@@ -23,6 +23,11 @@ public class Str extends Box<String> {
 	return new Vec(new Box[] { this });
     }
 
+    @Override
+    public boolean sameValue(Evaluable x) {
+	return ((Str) x).value.equals(value);
+    }
+
     public String toString() {
 	return String.format("Str[len=%d]: `%s'", value.length(), value);
     }

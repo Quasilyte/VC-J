@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import vc.lang.impl.*;
 import vc.lang.runtime.*;
 import vc.lang.impl.exception.SyntaxError;
-import vc.lang.types.Evaluable;
+import vc.lang.types.*;
 import vc.lang.types.num.*;
 import vc.lang.types.str.Str;
 import vc.lang.types.vec.Vec;
@@ -16,7 +16,7 @@ public class BuiltinDeck extends Deck<ExecutableCard> {
     }
     
     public BuiltinDeck() {
-	allocate(5);
+	allocate(8);
 
 	insertCard("[", this::vecCollect);
 	
@@ -33,9 +33,9 @@ public class BuiltinDeck extends Deck<ExecutableCard> {
     public void numBinOp(EvaluationContext context, BinaryOpInvoker invoker) {
 	DataStack stack = context.getDataStack();
 	
-	Num a = (Num) stack.pop();
+	Num operand = (Num) stack.pop();
 
-	stack.push(invoker.invoke(a));
+	stack.push(invoker.invoke(operand));
     }
 
     public void numAddBinOp(EvaluationContext context) {
@@ -55,7 +55,18 @@ public class BuiltinDeck extends Deck<ExecutableCard> {
     }
 
     public void numEqBinOp(EvaluationContext context) {
-	numBinOp(context, ((Num) context.getDataStack().pop())::eq);
+	DataStack stack = context.getDataStack();
+	Box a = (Box) stack.pop(), b = (Box) stack.pop();
+
+	stack.push(a.eq(b));
+
+	/*
+	if (a.getClass() == b.getClass()) {
+	    stack.push(a.eq(b));
+	} else {
+	    stack.push(new IntNum(0));
+	}
+	*/
     }
     
     public void numGtBinOp(EvaluationContext context) {
@@ -91,9 +102,5 @@ public class BuiltinDeck extends Deck<ExecutableCard> {
 		elements.add(element);
 	    } catch (Exception e) {}
 	}
-    }
-
-    public void hello(EvaluationContext context) {
-	System.out.println("wow! it works!");
     }
 }
