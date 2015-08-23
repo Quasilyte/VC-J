@@ -2,7 +2,7 @@ package vc.lang.impl;
 
 import vc.lang.types.*;
 import vc.lang.runtime.*;
-import vc.lang.impl.deck.BuiltinDeck;
+import vc.lang.impl.deck.Deck;
 
 public class Interpreter extends EvaluationContext {
     public Interpreter(String input) {
@@ -29,8 +29,8 @@ public class Interpreter extends EvaluationContext {
     }
 
     @Override
-    public BuiltinDeck getBuiltinDeck() {
-	return builtins;
+    public Deck getDeck() {
+	return deck;
     }
 
     @Override
