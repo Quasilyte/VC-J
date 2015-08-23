@@ -4,9 +4,19 @@ import vc.lang.impl.EvaluationContext;
 import vc.lang.impl.Syntax;
 import vc.lang.runtime.ExecException;
 
-public class Str extends Box<String> implements MetaToken {
+public class Str extends Box<String> implements MetaToken, Seq {
     public Str(String value) {
 	this.value = value;
+    }
+
+    @Override
+    public Num len() {
+	return new Num((double) value.length());
+    }
+
+    @Override
+    public Box nth(int index) {
+	return new Num((double) value.charAt(index));
     }
 
     @Override

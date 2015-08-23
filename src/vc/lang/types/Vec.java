@@ -6,7 +6,8 @@ import vc.lang.impl.EvaluationContext;
 import vc.lang.runtime.ExecException;
 import vc.lang.impl.deck.ExecutableCard;
 
-public class Vec extends Box<Token[]> implements MetaToken, ExecutableCard {
+public class Vec extends Box<Token[]>
+implements MetaToken, ExecutableCard, Seq {
     /*
      * Public:
      */
@@ -18,6 +19,16 @@ public class Vec extends Box<Token[]> implements MetaToken, ExecutableCard {
     public Vec(List<Token> elements) {
 	value = new Token[elements.size()];
 	value = elements.toArray(value);
+    }
+    
+    @Override
+    public Num len() {
+	return new Num((double) value.length);
+    }
+
+    @Override
+    public Box nth(int index) {
+	return (Box) value[index];
     }
 
     @Override

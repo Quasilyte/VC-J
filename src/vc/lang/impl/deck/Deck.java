@@ -27,6 +27,9 @@ public class Deck {
 	cards.put(Syntax.NUM_ASSERT_KEY, this::numAssert);
 	cards.put(Syntax.STR_ASSERT_KEY, this::strAssert);
 	cards.put(Syntax.VEC_ASSERT_KEY, this::vecAssert);
+
+	cards.put(Syntax.SEQ_LEN_KEY, this::seqLen);
+	cards.put(Syntax.SEQ_NTH_KEY, this::seqNth);
 	
 	cards.put("[", this::vecCollect);
 	
@@ -101,6 +104,20 @@ public class Deck {
 	Box top = (Box) stack.pop();
 
 	stack.push(top.toVec());
+    }
+
+    public void seqLen(EvaluationContext context) throws ExecException {
+	DataStack stack = context.getDataStack();
+
+	stack.push(((Seq) stack.top()).len());
+    }
+
+    public void seqNth(EvaluationContext context) throws ExecException {
+	DataStack stack = context.getDataStack();
+	
+	Num index = (Num) stack.pop();
+
+	stack.push(((Seq) stack.top()).nth(index.value.intValue()));
     }
 
     public void numBinOp(EvaluationContext context, BinaryOpInvoker invoker) {

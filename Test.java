@@ -13,7 +13,9 @@ public class Test {
 
 	// String script = "123 str! 123.7 str!";
 	// String script = "'123' num!";
-	String script = "1 vec! [1] vec!";
+	// String script = "1 vec! [1] vec!";
+
+	String script = "[32 f 'cx'] len";
 	
 	new Interpreter(script).eval();
     }

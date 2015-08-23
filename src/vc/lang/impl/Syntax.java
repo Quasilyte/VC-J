@@ -18,7 +18,9 @@ public abstract class Syntax {
 	ENDIF_KEY = "endif",
 	NUM_ASSERT_KEY = "num!",
 	STR_ASSERT_KEY = "str!",
-	VEC_ASSERT_KEY = "vec!";
+	VEC_ASSERT_KEY = "vec!",
+	SEQ_LEN_KEY = "len",
+	SEQ_NTH_KEY = "nth";
 
     static {
 	condTermination = Pattern.compile(
