@@ -1,5 +1,6 @@
 package vc.lang.impl.deck;
 
+import java.util.regex.Pattern;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -14,8 +15,12 @@ public class Deck {
 
     private HashMap<String, ExecutableCard> cards;
     
+    private Pattern condTermination;
+    
     public Deck(int capacity) {
 	cards = new HashMap<String, ExecutableCard>(capacity);
+
+	condTermination = Pattern.compile("\\bendif\\b|\\belse\\b");
 	
 	cards.put("eval", this::evalToken);
 	cards.put("bind", this::bindToken);
@@ -59,46 +64,16 @@ public class Deck {
 
     public void condIf(EvaluationContext context)
     throws ExecException {
-	DataStack stack = context.getDataStack();
-
-	Box top = (Box) stack.pop();
+	Box top = (Box) context.getDataStack().pop();
 
 	if (!top.isTruth()) {
-	    Tokenizer tokenizer = context.getTokenizer();
-
-	    try {
-		while (true) {
-		    Token token = tokenizer.nextToken();
-		    String symbol = token.getSymbol();
-		    
-		    if ("else".equals(symbol) || "endif".equals(symbol)) {
-			return;
-		    }
-		}
-	    } catch (Exception e) {
-		context.exception("IF operator lacks corresponding ELSE/ENDIF")
-		    .toss();
-	    }
+	    context.getTokenizer().skipUntil(context, condTermination);
 	}
     }
 
     public void condElse(EvaluationContext context)
     throws ExecException {
-	Tokenizer tokenizer = context.getTokenizer();
-	
-	try {
-	    while (true) {
-		Token token = tokenizer.nextToken();
-		String symbol = token.getSymbol();
-		    
-		if ("else".equals(symbol) || "endif".equals(symbol)) {
-		    return;
-		}
-	    }
-	} catch (Exception e) {
-	    context.exception("ELSE operator lacks corresponding ELSE/ENDIF")
-		.toss();
-	}
+	context.getTokenizer().skipUntil(context, condTermination);
     }
 
     public void condEndIf(EvaluationContext context) {

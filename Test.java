@@ -9,7 +9,7 @@ public class Test {
 	              + "three-2";
 	*/
 
-	String script = "0 if 'true' else 'false' endif 'always'";
+	String script = "'' if 'true' else 'false' endif 'always'";
 	
 	new Interpreter(script).eval();
     }

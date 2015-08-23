@@ -1,5 +1,7 @@
 package vc.lang.impl;
 
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 import java.util.ArrayDeque;
 
 import vc.lang.types.Token;
@@ -46,5 +48,26 @@ public class Tokenizer {
     
     public Token currentToken() {
 	return lastEmitted;
+    }
+
+    public void skipUntil(EvaluationContext context, Pattern pattern)
+    throws ExecException {
+	try {
+	    while (true) {
+		String symbol = nextToken().getSymbol();
+		
+		if (symbol != null) {
+		    Matcher matcher = pattern.matcher(symbol);
+
+		    if (matcher.matches()) {
+			return;
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    context.exception("unexpected end of buffer")
+		.details("scan pattern: `%s'", pattern)
+		.toss();
+	}
     }
 }
