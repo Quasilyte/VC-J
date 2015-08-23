@@ -1,6 +1,7 @@
 package vc.lang.impl;
 
 import vc.lang.types.*;
+import vc.lang.runtime.ExecException;
 
 public class TokenEmitter {
     private interface BytePredicate {
@@ -21,7 +22,7 @@ public class TokenEmitter {
 	return rpos < buf.length;
     }
 
-    public Token emit() throws Exception {
+    public Token emit() throws ExecException {
 	Token token = fetchToken();
 
 	skipWhile(Character::isWhitespace);
@@ -41,7 +42,7 @@ public class TokenEmitter {
 	return new String(buf, from, len);
     }
     
-    private Token fetchToken() throws Exception {
+    private Token fetchToken() throws ExecException {
 	switch (buf[rpos]) {
 	case '\'':
 	    return fetchQuoted();
@@ -54,7 +55,7 @@ public class TokenEmitter {
 	}
     }
 
-    private Token fetchQuoted() throws Exception {
+    private Token fetchQuoted() throws ExecException {
 	try {
 	    lpos = ++rpos; // Step over first quote
 	   
@@ -62,8 +63,8 @@ public class TokenEmitter {
 
 	    // One additional increment to bypass enclosing quote
 	    return new Str(slice(lpos, (rpos++) - lpos));
-	} catch (Exception e) {
-	    throw new Exception("unbalanced quote in str literal");
+	} catch (Exception e) {	    
+	    throw new ExecException("unbalanced quote in str literal");
 	}
     }
     

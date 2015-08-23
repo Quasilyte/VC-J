@@ -1,7 +1,5 @@
 package vc.lang.types;
 
-import vc.lang.types.*;
-
 public final class Num extends Box<Double> {             
     private static final double FRACTIONAL_THRESHOLD = 0.000001;
     

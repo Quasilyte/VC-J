@@ -30,9 +30,10 @@ public class BuiltinDeck extends Deck<ExecutableCard> {
 
     public void evalToken(EvaluationContext context) throws ExecException {
 	DataStack stack = context.getDataStack();
-
-	stack.pop().eval(context);
-	// context.getTokenizer()
+	
+	if (stack.top() instanceof MetaToken) {
+	    ((MetaToken) stack.pop()).unwrap(context);
+	}
     }
 
     public void numBinOp(EvaluationContext context, BinaryOpInvoker invoker) {
@@ -78,30 +79,24 @@ public class BuiltinDeck extends Deck<ExecutableCard> {
 	numBinOp(context, ((Num) context.getDataStack().pop())::lt);
     }
 
-    public void vecCollect(EvaluationContext context) {
-	int depth = 0; // For processing nested vectors
-	Tokenizer tokenizer = context.getTokenizer();
-	ArrayList<Token> tokens = new ArrayList<>(6);
+    public void vecCollect(EvaluationContext context) throws ExecException {
+	context.getDataStack().push(vecCollectRecur(context.getTokenizer()));
+    }
+
+    public Vec vecCollectRecur(Tokenizer tokenizer) throws ExecException {
+	ArrayList<Token> tokens = new ArrayList<>(8);
 
 	while (true) {
-	    try {
-		Token token = tokenizer.nextToken();
-		String symbol = token.getSymbol();
-		
-		if ("[".equals(symbol)) {
-		    ++depth;
-		} else if ("]".equals(symbol)) {
-		    if (depth == 0) {
-			context.getDataStack().push(new Vec(tokens));
-			
-		        return;
-		    } else {
-			--depth;
-		    }
-		}
+	    Token token = tokenizer.nextToken();
+	    String symbol = token.getSymbol();
 
-		tokens.add(token);
-	    } catch (Exception e) {}
+	    if ("]".equals(symbol)) {
+		return new Vec(tokens);
+	    }
+
+	    tokens.add(
+		"[".equals(symbol) ? vecCollectRecur(tokenizer) : token
+	    );
 	}
     }
 }

@@ -1,8 +1,9 @@
 package vc.lang.types;
 
-import vc.lang.types.*;
+import vc.lang.impl.EvaluationContext;
+import vc.lang.runtime.ExecException;
 
-public class Str extends Box<String> {
+public class Str extends Box<String> implements MetaToken {
     public Str(String value) {
 	this.value = value;
     }
@@ -24,6 +25,15 @@ public class Str extends Box<String> {
     @Override
     public boolean sameValue(Token other) {
 	return ((Str) other).value.equals(value);
+    }
+
+    @Override
+    public void unwrap(EvaluationContext context) throws ExecException {
+	if (value.charAt(0) == '#') {
+	    context.getTokenizer().insert(new Function(value.substring(1)));
+	} else {
+	    eval(context);
+	}
     }
 
     public String toString() {

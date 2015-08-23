@@ -2,11 +2,10 @@ package vc.lang.types;
 
 import java.util.List;
 
-import vc.lang.types.*;
 import vc.lang.impl.EvaluationContext;
 import vc.lang.runtime.ExecException;
 
-public class Vec extends Box<Token[]> {    
+public class Vec extends Box<Token[]> implements MetaToken {    
     public Vec(Token[] value) {
 	this.value = value;
     }
@@ -54,19 +53,11 @@ public class Vec extends Box<Token[]> {
 
 	return true;
     }
-
-    /*
+    
     @Override
-    public void eval(EvaluationContext context) throws ExecException {
-	// context.getTokenizer().insertTokens(value);
-	
-	/*
-	for (Token token : value) {
-	    token.eval(context);
-	}
+    public void unwrap(EvaluationContext context) throws ExecException {
+	context.getTokenizer().insert(value);
     }
-    */
-
 
     public String toString() {
 	if (value.length == 0) {

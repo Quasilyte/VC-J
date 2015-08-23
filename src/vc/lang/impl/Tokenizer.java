@@ -3,6 +3,7 @@ package vc.lang.impl;
 import java.util.ArrayDeque;
 
 import vc.lang.types.Token;
+import vc.lang.runtime.ExecException;
 
 public class Tokenizer {
     private TokenEmitter emitter;
@@ -23,13 +24,17 @@ public class Tokenizer {
 	return !stock.isEmpty() || emitter.canScan();
     }
 
-    public void insertTokens(Token[] newTokens) {
-	for (Token newToken : newTokens) {
-	    stock.push(newToken);
+    public void insert(Token newToken) {
+	stock.push(newToken);
+    }
+    
+    public void insert(Token[] newTokens) {
+	for (int i = newTokens.length - 1; i > -1; --i) {
+	    stock.push(newTokens[i]);
 	}
     }
    
-    public Token nextToken() throws Exception {
+    public Token nextToken() throws ExecException {
 	if (!stock.isEmpty()) {
 	    lastEmitted = stock.pop();
 	} else {
