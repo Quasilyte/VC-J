@@ -22,8 +22,13 @@ public final class Num extends Box<Double> {
     }
 
     @Override
-    public boolean sameValue(Token x) {
-	return cmp((Num) x) == 0;
+    public boolean sameValue(Token other) {
+	return cmp((Num) other) == 0;
+    }
+
+    @Override
+    public boolean isTruth() {
+	return Double.compare(value, 0.0) != 0;
     }
 
     public Num add(Num otherNum) {

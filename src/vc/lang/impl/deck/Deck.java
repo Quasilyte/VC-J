@@ -16,9 +16,13 @@ public class Deck {
     
     public Deck(int capacity) {
 	cards = new HashMap<String, ExecutableCard>(capacity);
-
+	
 	cards.put("eval", this::evalToken);
 	cards.put("bind", this::bindToken);
+
+	cards.put("if", this::condIf);
+	cards.put("else", this::condElse);
+	cards.put("endif", this::condEndIf);
 	
 	cards.put("[", this::vecCollect);
 	
@@ -51,6 +55,54 @@ public class Deck {
 	Str str = (Str) stack.pop();
 	
 	cards.put(str.makeSymbol(context), (Vec) stack.pop());
+    }
+
+    public void condIf(EvaluationContext context)
+    throws ExecException {
+	DataStack stack = context.getDataStack();
+
+	Box top = (Box) stack.pop();
+
+	if (!top.isTruth()) {
+	    Tokenizer tokenizer = context.getTokenizer();
+
+	    try {
+		while (true) {
+		    Token token = tokenizer.nextToken();
+		    String symbol = token.getSymbol();
+		    
+		    if ("else".equals(symbol) || "endif".equals(symbol)) {
+			return;
+		    }
+		}
+	    } catch (Exception e) {
+		context.exception("IF operator lacks corresponding ELSE/ENDIF")
+		    .toss();
+	    }
+	}
+    }
+
+    public void condElse(EvaluationContext context)
+    throws ExecException {
+	Tokenizer tokenizer = context.getTokenizer();
+	
+	try {
+	    while (true) {
+		Token token = tokenizer.nextToken();
+		String symbol = token.getSymbol();
+		    
+		if ("else".equals(symbol) || "endif".equals(symbol)) {
+		    return;
+		}
+	    }
+	} catch (Exception e) {
+	    context.exception("ELSE operator lacks corresponding ELSE/ENDIF")
+		.toss();
+	}
+    }
+
+    public void condEndIf(EvaluationContext context) {
+	// Do nothing!
     }
 
     public void numBinOp(EvaluationContext context, BinaryOpInvoker invoker) {
