@@ -12,8 +12,8 @@ public final class Num extends Box<Double> {
     }
     
     @Override
-    public Box toStr() {
-	return new Str(String.valueOf(value));
+    public Box toStr(EvaluationContext context) {
+        return new Str(String.valueOf(value));
     }
     
     @Override

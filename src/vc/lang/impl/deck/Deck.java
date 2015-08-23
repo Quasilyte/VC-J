@@ -17,12 +17,14 @@ public class Deck {
     public Deck(int capacity) {
 	cards = new HashMap<String, ExecutableCard>(capacity);
 
-	cards.put("eval", this::evalToken);
-	cards.put("bind", this::bindToken);
+	cards.put(Syntax.EVAL_KEY, this::evalToken);
+	cards.put(Syntax.BIND_KEY, this::bindToken);
 
-	cards.put("if", this::condIf);
-	cards.put("else", this::condElse);
-	cards.put("endif", this::condEndIf);
+	cards.put(Syntax.IF_KEY, this::condIf);
+	cards.put(Syntax.ELSE_KEY, this::condElse);
+	cards.put(Syntax.ENDIF_KEY, this::condEndIf);
+
+	cards.put(Syntax.STR_CAST_KEY, this::strCast);
 	
 	cards.put("[", this::vecCollect);
 	
@@ -73,6 +75,14 @@ public class Deck {
 
     public void condEndIf(EvaluationContext context) {
 	// Do nothing!
+    }
+
+    public void strCast(EvaluationContext context) throws ExecException {
+	DataStack stack = context.getDataStack();
+	
+	Box top = (Box) stack.pop();
+
+	stack.push(top.toStr());
     }
 
     public void numBinOp(EvaluationContext context, BinaryOpInvoker invoker) {

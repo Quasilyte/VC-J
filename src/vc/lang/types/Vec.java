@@ -7,6 +7,10 @@ import vc.lang.runtime.ExecException;
 import vc.lang.impl.deck.ExecutableCard;
 
 public class Vec extends Box<Token[]> implements MetaToken, ExecutableCard {
+    /*
+     * Public:
+     */
+    
     public Vec(Token[] value) {
 	this.value = value;
     }
@@ -17,23 +21,27 @@ public class Vec extends Box<Token[]> implements MetaToken, ExecutableCard {
     }
 
     @Override
-    public Box toNum() throws Exception {
-	if (value[0] instanceof Num) {
-	    // return value[0];
-	    return null;
+    public Box toNum(EvaluationContext context) throws ExecException {
+	ensureNotEmpty(context);
+	
+	if (value[0].getClass() == Num.class) {
+	    return (Box) value[0];
 	}
 
-	throw new Exception("error during type assertion");
+	context.exception("type assert failed")
+	    .details("VEC->NUM possible only when first element is NUM").toss();
     }
 
     @Override
-    public Box toStr() throws Exception {
-	if (value[0] instanceof Str) {
-	    // return value[0];
-	    return null;
+    public Box toStr(EvaluationContext context) throws ExecException {
+	ensureNotEmpty(context);
+	
+	if (value[0].getClass() == Str.class) {
+	    return (Box) value[0];
 	}
-
-	throw new Exception("error during type assertion");
+	
+	context.exception("type assert failed")
+	    .details("VEC->STR possible only when first element is STR").toss();
     }
 
     @Override
@@ -79,5 +87,15 @@ public class Vec extends Box<Token[]> implements MetaToken, ExecutableCard {
     public void execute(EvaluationContext context)
     throws ExecException {
 	unwrap(context);
+    }
+
+    /*
+     * Private:
+     */
+
+    private void ensureNotEmpty(EvaluationContext context) throws ExecException {
+	if (value.length == 0) {
+	    context.exception("accessing empty VEC is forbidden").toss();
+	}
     }
 }
