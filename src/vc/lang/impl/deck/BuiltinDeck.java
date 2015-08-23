@@ -12,9 +12,10 @@ public class BuiltinDeck extends Deck<ExecutableCard> {
     }
     
     public BuiltinDeck() {
-	allocate(9);
+	allocate(20);
 
 	insertCard("eval", this::evalToken);
+	insertCard("bind", this::bindToken);
 	
 	insertCard("[", this::vecCollect);
 	
@@ -28,12 +29,21 @@ public class BuiltinDeck extends Deck<ExecutableCard> {
 	insertCard("<", this::numLtBinOp);
     }
 
-    public void evalToken(EvaluationContext context) throws ExecException {
+    public void evalToken(EvaluationContext context)
+    throws ExecException {
 	DataStack stack = context.getDataStack();
 	
 	if (stack.top() instanceof MetaToken) {
 	    ((MetaToken) stack.pop()).unwrap(context);
 	}
+    }
+
+    public void bindToken(EvaluationContext context)
+    throws ExecException {
+	DataStack stack = context.getDataStack();
+	Str str = (Str) stack.pop();
+	
+	insertCard(str.makeSymbol(context), (Vec) stack.pop());
     }
 
     public void numBinOp(EvaluationContext context, BinaryOpInvoker invoker) {

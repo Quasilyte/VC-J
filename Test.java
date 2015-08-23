@@ -3,7 +3,9 @@ import vc.lang.runtime.*;
 
 public class Test {
     public static void main(String[] args) throws Exception {
-	String script = "'#34' eval";
+	String script = "[1 2 3] '#three' bind\n"
+	              + "[three three] '#three-2' bind\n"
+	              + "three-2";
 	
 	new Interpreter(script).eval();
     }

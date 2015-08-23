@@ -31,7 +31,7 @@ public class Str extends Box<String> implements MetaToken {
     public void unwrap(EvaluationContext context)
     throws ExecException {
 	if (value.charAt(0) == '#') {
-	    context.getTokenizer().insert(new Function(toSym(context)));
+	    context.getTokenizer().insert(new Function(makeSymbol(context)));
 	} else {
 	    eval(context);
 	}
@@ -44,7 +44,7 @@ public class Str extends Box<String> implements MetaToken {
 	);
     }
 
-    public String toSym(EvaluationContext context)
+    public String makeSymbol(EvaluationContext context)
     throws ExecException {
 	String details = null;
 	char c = value.charAt(0);

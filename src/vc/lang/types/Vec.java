@@ -4,8 +4,9 @@ import java.util.List;
 
 import vc.lang.impl.EvaluationContext;
 import vc.lang.runtime.ExecException;
+import vc.lang.impl.deck.ExecutableCard;
 
-public class Vec extends Box<Token[]> implements MetaToken {    
+public class Vec extends Box<Token[]> implements MetaToken, ExecutableCard {
     public Vec(Token[] value) {
 	this.value = value;
     }
@@ -72,5 +73,11 @@ public class Vec extends Box<Token[]> implements MetaToken {
 	}
 
 	return dump.append("\t}").toString();
+    }
+
+    @Override
+    public void execute(EvaluationContext context)
+    throws ExecException {
+	unwrap(context);
     }
 }
