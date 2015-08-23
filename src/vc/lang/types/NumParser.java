@@ -22,7 +22,7 @@ public abstract class NumParser {
 		}
 		
 		foundPoint = true;
-	    } else if(!isDigit(c)) {
+	    } else if(c <= '0' || c >= '9') {
 		return false;
 	    }
 	}
@@ -41,10 +41,6 @@ public abstract class NumParser {
     private static boolean firstCharIsValid(String symbol) {
 	char c = symbol.charAt(0);
 
-	return isDigit(c) || c == '-';
-    }
-
-    private static boolean isDigit(char c) {
-	return c >= '0' && c <= '9';
+	return (c >= '0' && c <= '9') || c == '-';
     }
 }
