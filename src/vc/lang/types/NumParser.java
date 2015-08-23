@@ -5,7 +5,7 @@ public abstract class NumParser {
      * Public:
      */
 
-    public final static boolean canParse(String symbol) {
+    public static boolean canParse(String symbol) {
 	if (symbol == null || !firstCharIsValid(symbol)) {
 	    return false;
 	}
@@ -30,7 +30,7 @@ public abstract class NumParser {
 	return true;
     }
     
-    public final static Num valueOf(String symbol) {
+    public static Num valueOf(String symbol) {
 	return new Num(Double.valueOf(symbol));
     }
 

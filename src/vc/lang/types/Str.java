@@ -1,6 +1,7 @@
 package vc.lang.types;
 
 import vc.lang.impl.EvaluationContext;
+import vc.lang.impl.Syntax;
 import vc.lang.runtime.ExecException;
 
 public class Str extends Box<String> implements MetaToken {
@@ -52,8 +53,12 @@ public class Str extends Box<String> implements MetaToken {
 
 	if (c != '#') {
 	    details = "not found `#' at the begining of STR";
-	} else if(len > 21 || len < 2) {
-	    details = "STR length must be in range of [2, 21]";
+	} else if(len > Syntax.MAX_SYMBOL_LEN || len < Syntax.MIN_SYMBOL_LEN) {
+	    details = String.format(
+		"STR length must be in range of [%d, %d]",
+		Syntax.MIX_SYMBOL_LEN,
+		Syntax.MAN_SYMBOL_LEN
+	    );
 	} else {
 	    c = value.charAt(1);
 	    if((c >= '0' && c <= '9') || c == '-' || c == ' ') {

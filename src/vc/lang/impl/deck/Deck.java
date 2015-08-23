@@ -1,6 +1,5 @@
 package vc.lang.impl.deck;
 
-import java.util.regex.Pattern;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -14,14 +13,10 @@ public class Deck {
     }
 
     private HashMap<String, ExecutableCard> cards;
-    
-    private Pattern condTermination;
-    
+        
     public Deck(int capacity) {
 	cards = new HashMap<String, ExecutableCard>(capacity);
 
-	condTermination = Pattern.compile("\\bendif\\b|\\belse\\b");
-	
 	cards.put("eval", this::evalToken);
 	cards.put("bind", this::bindToken);
 
@@ -67,13 +62,13 @@ public class Deck {
 	Box top = (Box) context.getDataStack().pop();
 
 	if (!top.isTruth()) {
-	    context.getTokenizer().skipUntil(context, condTermination);
+	    context.getTokenizer().skipUntil(context, Syntax.condTermination);
 	}
     }
 
     public void condElse(EvaluationContext context)
     throws ExecException {
-	context.getTokenizer().skipUntil(context, condTermination);
+	context.getTokenizer().skipUntil(context, Syntax.condTermination);
     }
 
     public void condEndIf(EvaluationContext context) {
