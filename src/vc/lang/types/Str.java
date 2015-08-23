@@ -18,6 +18,11 @@ public class Str extends Box<String> implements MetaToken, Seq {
     public Box nth(int index) {
 	return new Num((double) value.charAt(index));
     }
+    
+    @Override
+    public void set(int index, Box value) {
+	// TBA, need to change Str wrapped type to Character[]
+    }
 
     @Override
     public Box toNum(EvaluationContext context) throws ExecException {

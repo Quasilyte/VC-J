@@ -1,6 +1,7 @@
     { Fix }
 * make line counting in TokenEmitter more robust
 * maybe matcher/pattern in skipUntil in tikenizer can be optimized
+* str must contain Character[] instead of String to be permit mutability
 
     { Consider }
 *
@@ -9,3 +10,4 @@
 * recursive toString for vectors
 * mechanism to "promote" exception, so the higher levels can append details
 * context error section must contain function name
+

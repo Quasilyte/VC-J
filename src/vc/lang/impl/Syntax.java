@@ -20,7 +20,8 @@ public abstract class Syntax {
 	STR_ASSERT_KEY = "str!",
 	VEC_ASSERT_KEY = "vec!",
 	SEQ_LEN_KEY = "len",
-	SEQ_NTH_KEY = "nth";
+	SEQ_NTH_KEY = "nth",
+	SEQ_SET_KEY = "set";
 
     static {
 	condTermination = Pattern.compile(

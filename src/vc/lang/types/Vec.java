@@ -32,6 +32,11 @@ implements MetaToken, ExecutableCard, Seq {
     }
 
     @Override
+    public void set(int index, Box value) {
+	this.value[index] = value;
+    }
+
+    @Override
     public Box toNum(EvaluationContext context) throws ExecException {
 	ensureNotEmpty(context);
 	

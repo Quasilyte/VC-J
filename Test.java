@@ -15,7 +15,8 @@ public class Test {
 	// String script = "'123' num!";
 	// String script = "1 vec! [1] vec!";
 
-	String script = "[32 f 'cx'] len";
+	// String script = "[32 f 'cx'] len";
+	String script = "[0 0 0] 0 'foo' set";
 	
 	new Interpreter(script).eval();
     }

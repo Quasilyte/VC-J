@@ -30,6 +30,7 @@ public class Deck {
 
 	cards.put(Syntax.SEQ_LEN_KEY, this::seqLen);
 	cards.put(Syntax.SEQ_NTH_KEY, this::seqNth);
+	cards.put(Syntax.SEQ_SET_KEY, this::seqSet);
 	
 	cards.put("[", this::vecCollect);
 	
@@ -85,7 +86,7 @@ public class Deck {
     public void numAssert(EvaluationContext context) throws ExecException {
 	DataStack stack = context.getDataStack();
 	
-	Box top = (Box) stack.pop();
+	Box top = stack.pop();
 
 	stack.push(top.toNum(context));
     }
@@ -93,7 +94,7 @@ public class Deck {
     public void strAssert(EvaluationContext context) throws ExecException {
 	DataStack stack = context.getDataStack();
 	
-	Box top = (Box) stack.pop();
+	Box top = stack.pop();
 
 	stack.push(top.toStr(context));
     }
@@ -101,7 +102,7 @@ public class Deck {
     public void vecAssert(EvaluationContext context) throws ExecException {
 	DataStack stack = context.getDataStack();
 	
-	Box top = (Box) stack.pop();
+	Box top = stack.pop();
 
 	stack.push(top.toVec());
     }
@@ -114,10 +115,19 @@ public class Deck {
 
     public void seqNth(EvaluationContext context) throws ExecException {
 	DataStack stack = context.getDataStack();
-	
-	Num index = (Num) stack.pop();
+        
+	int index = ((Num) stack.pop()).value.intValue();
 
-	stack.push(((Seq) stack.top()).nth(index.value.intValue()));
+	stack.push(((Seq) stack.top()).nth(index));
+    }
+
+    public void seqSet(EvaluationContext context) throws ExecException {
+	DataStack stack = context.getDataStack();
+
+	Box value = stack.pop();
+	int index = ((Num) stack.pop()).value.intValue();
+
+	((Seq) stack.top()).set(index, value);
     }
 
     public void numBinOp(EvaluationContext context, BinaryOpInvoker invoker) {
