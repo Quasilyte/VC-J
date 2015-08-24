@@ -1,3 +1,7 @@
+import java.io.FileInputStream;
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+
 import vc.lang.impl.*;
 import vc.lang.runtime.*;
 
@@ -16,9 +20,15 @@ public class Test {
 	// String script = "1 vec! [1] vec!";
 
 	// String script = "[32 f 'cx'] len";
-	String script = "[0 0 0] 0 'foo' set";
-	
-	new Interpreter(script).eval();
+	// String script = "[0 0 0] 0 'foo' set";
+
+	InputStream input = new BufferedInputStream(
+	    new FileInputStream("test.vcl")
+	);
+	 
+	new Interpreter(input).eval();
+
+	input.close();
     }
 }
 

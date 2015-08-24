@@ -1,5 +1,8 @@
 package vc.lang.impl;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import vc.lang.types.*;
 import vc.lang.runtime.*;
 import vc.lang.impl.deck.Deck;
@@ -7,6 +10,14 @@ import vc.lang.impl.deck.Deck;
 public class Interpreter extends EvaluationContext {
     public Interpreter(String input) {
 	tokenizer.resetWith(input);
+    }
+
+    public Interpreter(InputStream input) throws IOException {
+	byte[] buf = new byte[input.available()];
+	
+	input.read(buf);
+	
+	tokenizer.resetWith(new String(buf));
     }
     
     public void eval() throws Exception {
