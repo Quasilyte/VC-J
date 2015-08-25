@@ -15,7 +15,7 @@ public class Str extends Box<String> implements Seq {
     }
 
     @Override
-    public Box nth(int index) {
+    public Token nth(int index) {
 	return new Num((double) value.charAt(index));
     }
     

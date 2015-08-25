@@ -1,1 +1,1 @@
-[foo] 0 quoted-nth
+'xsd' 0 nth

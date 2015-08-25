@@ -26,8 +26,8 @@ public class Vec extends Box<Token[]> implements ExecutableCard, Seq {
     }
 
     @Override
-    public Box nth(int index) {
-	return (Box) value[index];
+    public Token nth(int index) {
+	return value[index];
     }
 
     @Override

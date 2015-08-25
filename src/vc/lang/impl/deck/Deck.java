@@ -120,7 +120,7 @@ public class Deck {
         
 	int index = ((Num) stack.pop()).value.intValue();
 
-	stack.push(((Seq) stack.top()).nth(index));
+	((Seq) stack.top()).nth(index).eval(context);
     }
     
     public void seqQnth(EvaluationContext context) throws ExecException {
@@ -129,7 +129,7 @@ public class Deck {
 	int index = ((Num) stack.pop()).value.intValue();
 
 	stack.push(
-	    new Str(((Token) ((Vec) stack.top()).value[index]).getSymbol())
+	    new Str(((Function) ((Vec) stack.top()).value[index]).getSymbol())
 	);
     }
 
