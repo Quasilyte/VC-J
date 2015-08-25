@@ -12,7 +12,7 @@ public abstract class Syntax {
 
     public static final String
 	EVAL_KEY = "eval",
-	BIND_KEY = "bind",
+	FUNC_REG_KEY = "as",
 	IF_KEY = "if",
 	ELSE_KEY = "else",
 	ENDIF_KEY = "endif",

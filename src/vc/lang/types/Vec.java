@@ -6,8 +6,7 @@ import vc.lang.impl.EvaluationContext;
 import vc.lang.runtime.ExecException;
 import vc.lang.impl.deck.ExecutableCard;
 
-public class Vec extends Box<Token[]>
-implements MetaToken, ExecutableCard, Seq {
+public class Vec extends Box<Token[]> implements ExecutableCard, Seq {
     /*
      * Public:
      */
@@ -37,7 +36,7 @@ implements MetaToken, ExecutableCard, Seq {
     }
 
     @Override
-    public Box toNum(EvaluationContext context) throws ExecException {
+    public Num toNum(EvaluationContext context) throws ExecException {
 	ensureNotEmpty(context);
 	
 	if (value[0].getClass() != Num.class) {
@@ -47,11 +46,11 @@ implements MetaToken, ExecutableCard, Seq {
 	    .toss();
 	}
 
-	return (Box) value[0];
+	return (Num) value[0];
     }
 
     @Override
-    public Box toStr(EvaluationContext context) throws ExecException {
+    public Str toStr(EvaluationContext context) throws ExecException {
 	ensureNotEmpty(context);
 	
 	if (value[0].getClass() != Str.class) {
@@ -60,12 +59,11 @@ implements MetaToken, ExecutableCard, Seq {
 		.toss();
 	}
 
-	return (Box) value[0];
+	return (Str) value[0];
     }
 
-    
     @Override
-    public Box toVec() {
+    public Vec toVec() {
 	return this;
     }
 
@@ -87,11 +85,6 @@ implements MetaToken, ExecutableCard, Seq {
 
 	return true;
     }
-    
-    @Override
-    public void unwrap(EvaluationContext context) throws ExecException {
-	context.getTokenizer().insert(value);
-    }
 
     public String toString() {
 	if (value.length == 0) {
@@ -111,7 +104,7 @@ implements MetaToken, ExecutableCard, Seq {
     @Override
     public void execute(EvaluationContext context)
     throws ExecException {
-	unwrap(context);
+	context.getTokenizer().insert(value);
     }
 
     /*

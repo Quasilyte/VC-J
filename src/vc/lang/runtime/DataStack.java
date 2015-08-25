@@ -29,6 +29,7 @@ public class DataStack {
 	} 
 	
 	StringBuilder dump = new StringBuilder();
+	
 	dump.append(String.format("Stack[len=%d]: {\n<top>", boxes.size()));
 	
 	while (boxes.size() > 0) {

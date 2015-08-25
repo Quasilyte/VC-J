@@ -16,11 +16,11 @@ public abstract class Box<WrappedType> extends Token {
 	return null;
     }
     
-    public abstract Box toNum(EvaluationContext context) throws ExecException;
+    public abstract Num toNum(EvaluationContext context) throws ExecException;
     
-    public abstract Box toStr(EvaluationContext context) throws ExecException;
+    public abstract Str toStr(EvaluationContext context) throws ExecException;
     
-    public abstract Box toVec();
+    public abstract Vec toVec();
 
     public Box eq(Box other) {
 	return new Num(sameValue(other) ? -1.0 : 0.0);

@@ -18,7 +18,7 @@ public class Deck {
 	cards = new HashMap<String, ExecutableCard>(capacity);
 
 	cards.put(Syntax.EVAL_KEY, this::evalToken);
-	cards.put(Syntax.BIND_KEY, this::bindToken);
+	cards.put(Syntax.FUNC_REG_KEY, this::funcRegToken);
 
 	cards.put(Syntax.IF_KEY, this::condIf);
 	cards.put(Syntax.ELSE_KEY, this::condElse);
@@ -52,17 +52,17 @@ public class Deck {
     throws ExecException {
 	DataStack stack = context.getDataStack();
 	
-	if (stack.top() instanceof MetaToken) {
-	    ((MetaToken) stack.pop()).unwrap(context);
+	if (stack.top().getClass() == Vec.class) {
+	    context.getTokenizer().insert(((Vec) stack.pop()).value);
 	}
     }
 
-    public void bindToken(EvaluationContext context)
+    public void funcRegToken(EvaluationContext context)
     throws ExecException {
-	DataStack stack = context.getDataStack();
-	Str str = (Str) stack.pop();
-	
-	cards.put(str.makeSymbol(context), (Vec) stack.pop());
+	cards.put(
+	    context.getTokenizer().nextToken().getSymbol(),
+	    context.getDataStack().pop().toVec()
+	);
     }
 
     public void condIf(EvaluationContext context)

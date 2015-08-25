@@ -1,5 +1,7 @@
 package vc.lang.impl;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.ArrayDeque;
@@ -12,10 +14,21 @@ public class Tokenizer {
     private ArrayDeque<Token> stock;
     private Token lastEmitted;
 
+    /*
+     * Public:
+     */
+    
     public void resetWith(String input) {
 	emitter = new TokenEmitter(input);
-	stock = new ArrayDeque<>(32);
-	lastEmitted = null;
+	reset();
+    }
+
+    public void resetWith(InputStream input) throws IOException {
+	byte[] buf = new byte[input.available()];
+	input.read(buf);
+	
+	emitter = new TokenEmitter(new String(buf));
+	reset();
     }
     
     public int line() {
@@ -69,5 +82,14 @@ public class Tokenizer {
 		.details("scan pattern: `%s'", pattern)
 		.toss();
 	}
+    }
+
+    /*
+     * Private:
+     */
+
+    private void reset() {
+	stock = new ArrayDeque<>(32);
+	lastEmitted = null;
     }
 }

@@ -12,15 +12,14 @@ public final class Num extends Box<Double> {
     public Num(double value) {
 	this.value = value;
     }
-
     
     @Override
-    public Box toNum(EvaluationContext context) {
+    public Num toNum(EvaluationContext context) {
 	return this;
     }
     
     @Override
-    public Box toStr(EvaluationContext context) {
+    public Str toStr(EvaluationContext context) {
 	if (asInt()) {
 	    return new Str(String.valueOf(value.intValue()));
 	} else {
@@ -30,7 +29,7 @@ public final class Num extends Box<Double> {
     
     
     @Override
-    public Box toVec() {
+    public Vec toVec() {
 	return new Vec(new Box[] { this });
     }
 

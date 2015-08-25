@@ -13,11 +13,7 @@ public class Interpreter extends EvaluationContext {
     }
 
     public Interpreter(InputStream input) throws IOException {
-	byte[] buf = new byte[input.available()];
-	
-	input.read(buf);
-	
-	tokenizer.resetWith(new String(buf));
+	tokenizer.resetWith(input);
     }
     
     public void eval() throws Exception {
