@@ -30,7 +30,9 @@ public class Deck {
 
 	cards.put(Syntax.SEQ_LEN_KEY, this::seqLen);
 	cards.put(Syntax.SEQ_NTH_KEY, this::seqNth);
+	cards.put("quoted-nth", this::seqQnth);
 	cards.put(Syntax.SEQ_SET_KEY, this::seqSet);
+	cards.put("unquoted-set", this::seqUset);
 	
 	cards.put("[", this::vecCollect);
 	
@@ -120,6 +122,16 @@ public class Deck {
 
 	stack.push(((Seq) stack.top()).nth(index));
     }
+    
+    public void seqQnth(EvaluationContext context) throws ExecException {
+	DataStack stack = context.getDataStack();
+        
+	int index = ((Num) stack.pop()).value.intValue();
+
+	stack.push(
+	    new Str(((Token) ((Vec) stack.top()).value[index]).getSymbol())
+	);
+    }
 
     public void seqSet(EvaluationContext context) throws ExecException {
 	DataStack stack = context.getDataStack();
@@ -128,6 +140,15 @@ public class Deck {
 	int index = ((Num) stack.pop()).value.intValue();
 
 	((Seq) stack.top()).set(index, value);
+    }
+    
+    public void seqUset(EvaluationContext context) throws ExecException {
+	DataStack stack = context.getDataStack();
+
+	Str symbol = (Str) stack.pop();
+	int index = ((Num) stack.pop()).value.intValue();
+
+	((Vec) stack.top()).value[index] = new Function(symbol.value);
     }
 
     public void numBinOp(EvaluationContext context, BinaryOpInvoker invoker) {
