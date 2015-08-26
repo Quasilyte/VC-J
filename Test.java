@@ -22,6 +22,7 @@ public class Test {
 	// String script = "[32 f 'cx'] len";
 	// String script = "[0 0 0] 0 'foo' set";
 
+	/*
 	InputStream input = new BufferedInputStream(
 	    new FileInputStream("test.vcl")
 	);
@@ -29,6 +30,8 @@ public class Test {
 	new Interpreter(input).eval();
 
 	input.close();
+	*/
+
     }
 }
 

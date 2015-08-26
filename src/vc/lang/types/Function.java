@@ -15,7 +15,7 @@ public class Function extends Token {
     
     @Override
     public void eval(EvaluationContext context) throws ExecException {
-	ExecutableCard card = context.getDeck().cardByKey(new String(name));
+	ExecutableCard card = context.getDeck().cardByKey(name);
 	
 	if (card == null) {
 	    context.exception("undefined function invocation")

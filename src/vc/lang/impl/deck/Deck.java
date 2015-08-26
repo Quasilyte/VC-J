@@ -12,44 +12,48 @@ public class Deck {
 	public Num invoke(Num b);
     }
 
-    private HashMap<String, ExecutableCard> cards;
+    private HashMap<CardIdentifier, ExecutableCard> cards;
         
     public Deck(int capacity) {
-	cards = new HashMap<String, ExecutableCard>(capacity);
+	cards = new HashMap<CardIdentifier, ExecutableCard>(capacity);
 
-	cards.put("shake", this::stackShake);
+	cardInsert(Syntax.STACK_SHAKE_KEY, this::stackShake);
 	
-	cards.put(Syntax.EVAL_KEY, this::evalToken);
-	cards.put(Syntax.FUNC_REG_KEY, this::funcRegToken);
+	cardInsert(Syntax.EVAL_KEY, this::evalToken);
+	cardInsert(Syntax.FUNC_REG_KEY, this::funcRegToken);
 
-	cards.put(Syntax.IF_KEY, this::condIf);
-	cards.put(Syntax.ELSE_KEY, this::condElse);
-	cards.put(Syntax.ENDIF_KEY, this::condEndIf);
+	cardInsert(Syntax.DO_TRUE_KEY, this::condIf);
+	cardInsert(Syntax.DO_FALSE_KEY, this::condElse);
+	cardInsert(Syntax.END_DO_KEY, this::condEndIf);
 
-	cards.put(Syntax.NUM_ASSERT_KEY, this::numAssert);
-	cards.put(Syntax.STR_ASSERT_KEY, this::strAssert);
-	cards.put(Syntax.VEC_ASSERT_KEY, this::vecAssert);
+	cardInsert(Syntax.NUM_ASSERT_KEY, this::numAssert);
+	cardInsert(Syntax.STR_ASSERT_KEY, this::strAssert);
+	cardInsert(Syntax.VEC_ASSERT_KEY, this::vecAssert);
 
-	cards.put(Syntax.SEQ_LEN_KEY, this::seqLen);
-	cards.put(Syntax.SEQ_NTH_KEY, this::seqNth);
-	cards.put("quoted-nth", this::seqQnth);
-	cards.put(Syntax.SEQ_SET_KEY, this::seqSet);
-	cards.put("unquoted-set", this::seqUset);
+	cardInsert(Syntax.SEQ_LEN_KEY, this::seqLen);
+	cardInsert(Syntax.SEQ_NTH_KEY, this::seqNth);
+	cardInsert(Syntax.SEQ_QNTH_KEY, this::seqQnth);
+	cardInsert(Syntax.SEQ_SET_KEY, this::seqSet);
+	cardInsert(Syntax.SEQ_USET_KEY, this::seqUset);
 	
-	cards.put("[", this::vecCollect);
+	cardInsert(Syntax.VEC_LIT_OPEN_KEY, this::vecCollect);
 	
-	cards.put("+", this::numAddBinOp);
-	cards.put("-", this::numSubBinOp);
-	cards.put("*", this::numMulBinOp);
-	cards.put("/", this::numDivBinOp);
+	cardInsert(Syntax.BIN_OP_ADD_KEY, this::numAddBinOp);
+	cardInsert(Syntax.BIN_OP_SUB_KEY, this::numSubBinOp);
+	cardInsert(Syntax.BIN_OP_MUL_KEY, this::numMulBinOp);
+	cardInsert(Syntax.BIN_OP_DIV_KEY, this::numDivBinOp);
 	
-	cards.put("=", this::eqBinOp);
-	cards.put(">", this::numGtBinOp);
-	cards.put("<", this::numLtBinOp);
+	cardInsert(Syntax.BIN_OP_EQ_KEY, this::eqBinOp);
+	cardInsert(Syntax.BIN_OP_GT_KEY, this::numGtBinOp);
+	cardInsert(Syntax.BIN_OP_LT_KEY, this::numLtBinOp);
     }
 
-    public ExecutableCard cardByKey(String key) {
-	return cards.get(key);
+    public void cardInsert(byte[] key, ExecutableCard card) {
+	cards.put(new CardIdentifier(key), card);
+    }
+
+    public ExecutableCard cardByKey(byte[] key) {
+	return cards.get(new CardIdentifier(key));
     }
 
     // n, fmt; take n elems, parse fmt
@@ -77,8 +81,8 @@ public class Deck {
 
     public void funcRegToken(EvaluationContext context)
     throws ExecException {
-	cards.put(
-	    new String(context.getTokenizer().nextToken().getSymbol()),
+	cardInsert(
+	    context.getTokenizer().nextToken().getSymbol(),
 	    context.getDataStack().pop().toVec()
 	);
     }
@@ -88,13 +92,13 @@ public class Deck {
 	Box top = (Box) context.getDataStack().pop();
 
 	if (!top.isTruth()) {
-	    context.getTokenizer().skipUntil(context, Syntax.condTermination);
+	    context.getTokenizer().skipUntil(context, Syntax.doTermination);
 	}
     }
 
     public void condElse(EvaluationContext context)
     throws ExecException {
-	context.getTokenizer().skipUntil(context, Syntax.condTermination);
+	context.getTokenizer().skipUntil(context, Syntax.doTermination);
     }
 
     public void condEndIf(EvaluationContext context) {
@@ -219,14 +223,15 @@ public class Deck {
 
 	while (true) {
 	    Token token = tokenizer.nextToken();
-	    String symbol = new String(token.getSymbol());
+	    byte[] symbol = token.getSymbol();
 
-	    if ("]".equals(symbol)) {
+	    if (symbol != null && symbol.length == 1 && symbol[0] == '[') {
 		return new Vec(tokens);
 	    }
 
 	    tokens.add(
-		"[".equals(symbol) ? vecCollectRecur(tokenizer) : token
+		symbol != null && symbol.length == 1 && symbol[0] == ']'
+		? vecCollectRecur(tokenizer) : token
 	    );
 	}
     }

@@ -2,14 +2,16 @@ package vc.lang.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 import java.util.ArrayDeque;
 
 import vc.lang.types.Token;
 import vc.lang.runtime.ExecException;
 
 public class Tokenizer {
+    public interface TokenMatcher {
+	public boolean matches(byte[] symbol);
+    }
+    
     private TokenEmitter emitter;
     private ArrayDeque<Token> stock;
     private Token lastEmitted;
@@ -63,16 +65,14 @@ public class Tokenizer {
 	return lastEmitted;
     }
 
-    public void skipUntil(EvaluationContext context, Pattern pattern)
+    public void skipUntil(EvaluationContext context, TokenMatcher pattern)
     throws ExecException {
 	try {
 	    while (true) {
-		String symbol = new String(nextToken().getSymbol());
+		byte[] symbol = nextToken().getSymbol();
 		
 		if (symbol != null) {
-		    Matcher matcher = pattern.matcher(symbol);
-
-		    if (matcher.matches()) {
+		    if (pattern.matches(symbol)) {
 			return;
 		    }
 		}
