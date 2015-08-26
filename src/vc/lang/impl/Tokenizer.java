@@ -67,7 +67,7 @@ public class Tokenizer {
     throws ExecException {
 	try {
 	    while (true) {
-		String symbol = nextToken().getSymbol();
+		String symbol = new String(nextToken().getSymbol());
 		
 		if (symbol != null) {
 		    Matcher matcher = pattern.matcher(symbol);

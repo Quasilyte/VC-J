@@ -2,7 +2,9 @@ package vc.lang.types;
 
 import vc.lang.impl.EvaluationContext;
 
-public final class Num extends Box<Double> {             
+public final class Num extends Box {
+    public double value;
+    
     private static final double FRACTIONAL_THRESHOLD = 0.000001;
     
     /*
@@ -21,9 +23,9 @@ public final class Num extends Box<Double> {
     @Override
     public Str toStr(EvaluationContext context) {
 	if (asInt()) {
-	    return new Str(String.valueOf(value.intValue()));
+	    return new Str(String.valueOf((int) value).getBytes());
 	} else {
-	    return new Str(String.valueOf(value));
+	    return new Str(String.valueOf(value).getBytes());
 	}
     }
     
@@ -69,7 +71,7 @@ public final class Num extends Box<Double> {
 
     public String toString() {
 	if (asInt()) {
-	    return String.format("Num[int]: `%d'", value.intValue());
+	    return String.format("Num[int]: `%d'", (int) value);
 	} else {
 	    return String.format("Num[double]: `%f'", value);
 	}

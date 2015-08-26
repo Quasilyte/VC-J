@@ -1,5 +1,7 @@
 package vc.lang.impl;
 
+import java.util.Arrays;
+
 import vc.lang.types.*;
 import vc.lang.runtime.ExecException;
 
@@ -38,8 +40,8 @@ public class TokenEmitter {
 	}
     }
 
-    private String slice(int from, int len) {
-	return new String(buf, from, len);
+    private byte[] slice(int from, int to) {
+	return Arrays.copyOfRange(buf, from, to);
     }
     
     private Token fetchToken() throws ExecException {
@@ -48,7 +50,7 @@ public class TokenEmitter {
 	    return fetchQuoted();
 	    
 	case '[':
-	    return new Function(slice(rpos++, 1));
+	    return new Function(slice(rpos, ++rpos));
 	    
 	default:
 	    return fetch();
@@ -62,7 +64,7 @@ public class TokenEmitter {
 	    skipWhile((c) -> { return c != '\''; });
 
 	    // One additional increment to bypass enclosing quote
-	    return new Str(slice(lpos, (rpos++) - lpos));
+	    return new Str(slice(lpos, rpos++));
 	} catch (Exception e) {	    
 	    throw new ExecException("unbalanced quote in str literal");
 	}
@@ -74,13 +76,13 @@ public class TokenEmitter {
 	
 	if (buf[rpos - 1] == ']') {
 	    if ((rpos - lpos) == 1) { // Single bracket -- valid token
-		return new Function("]"); 
+		return new Function(new byte[] { ']' }); 
 	    } else {
 		--rpos; // We need this bracket to be separate token
 	    }
 	}
 	
-	String symbol = slice(lpos, rpos - lpos);
+	byte[] symbol = slice(lpos, rpos);
 
 	if (NumParser.canParse(symbol)) {
 	    return NumParser.valueOf(symbol);

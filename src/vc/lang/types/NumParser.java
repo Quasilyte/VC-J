@@ -5,16 +5,20 @@ public abstract class NumParser {
      * Public:
      */
 
-    public static boolean canParse(String symbol) {
-	if (symbol == null || !firstCharIsValid(symbol)) {
-	    return false;
+    public static boolean canParse(byte[] symbol) {
+	byte c = symbol[0];
+	
+	if (symbol == null || charIsNotDigit(c)) {
+	    // Maybe it is negative numerical literal?
+       	    if (c != '-' || symbol.length == 1) {
+		return false;
+	    }
 	}
 
 	boolean foundPoint = false;
-	char c;
 
-	for (int i = 1, len = symbol.length(); i < len; ++i) {
-	    c = symbol.charAt(i);
+	for (int i = 1; i < symbol.length; ++i) {
+	    c = symbol[i];
 		
 	    if (c == '.') {
 		if (foundPoint) { // 2 or more points are no good
@@ -22,7 +26,7 @@ public abstract class NumParser {
 		}
 		
 		foundPoint = true;
-	    } else if(c <= '0' || c >= '9') {
+	    } else if(charIsNotDigit(c)) {
 		return false;
 	    }
 	}
@@ -30,17 +34,15 @@ public abstract class NumParser {
 	return true;
     }
     
-    public static Num valueOf(String symbol) {
-	return new Num(Double.valueOf(symbol));
+    public static Num valueOf(byte[] symbol) {
+	return new Num(Double.valueOf(new String(symbol)));
     }
 
     /*
      * Private:
      */
 
-    private static boolean firstCharIsValid(String symbol) {
-	char c = symbol.charAt(0);
-
-	return (c >= '0' && c <= '9') || c == '-';
+    private static boolean charIsNotDigit(byte c) {
+	return c < '0' || c > '9';
     }
 }

@@ -6,7 +6,9 @@ import vc.lang.impl.EvaluationContext;
 import vc.lang.runtime.ExecException;
 import vc.lang.impl.deck.ExecutableCard;
 
-public class Vec extends Box<Token[]> implements ExecutableCard, Seq {
+public class Vec extends Box implements ExecutableCard, Seq {
+    public Token[] value;
+    
     /*
      * Public:
      */

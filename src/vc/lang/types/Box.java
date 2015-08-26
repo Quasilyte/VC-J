@@ -3,16 +3,14 @@ package vc.lang.types;
 import vc.lang.impl.EvaluationContext;
 import vc.lang.runtime.ExecException;
 
-public abstract class Box<WrappedType> extends Token {
-    public WrappedType value;
-    
+public abstract class Box extends Token {
     @Override
     public void eval(EvaluationContext context) throws ExecException {
 	context.getDataStack().push(this);
     }
 
     @Override
-    public String getSymbol() {
+    public byte[] getSymbol() {
 	return null;
     }
     

@@ -17,6 +17,8 @@ public class Deck {
     public Deck(int capacity) {
 	cards = new HashMap<String, ExecutableCard>(capacity);
 
+	cards.put("shake", this::stackShake);
+	
 	cards.put(Syntax.EVAL_KEY, this::evalToken);
 	cards.put(Syntax.FUNC_REG_KEY, this::funcRegToken);
 
@@ -50,6 +52,20 @@ public class Deck {
 	return cards.get(key);
     }
 
+    // n, fmt; take n elems, parse fmt
+    public void stackShake(EvaluationContext context)
+    throws ExecException {
+	DataStack stack = context.getDataStack();
+
+	int n = (int) ((Num) stack.pop()).value;
+	// char[] fmt = ((Str) stack.pop()).value.chars();
+	/*
+	for (char c : fmt) {
+	    
+	}
+	*/
+    }
+
     public void evalToken(EvaluationContext context)
     throws ExecException {
 	DataStack stack = context.getDataStack();
@@ -62,7 +78,7 @@ public class Deck {
     public void funcRegToken(EvaluationContext context)
     throws ExecException {
 	cards.put(
-	    context.getTokenizer().nextToken().getSymbol(),
+	    new String(context.getTokenizer().nextToken().getSymbol()),
 	    context.getDataStack().pop().toVec()
 	);
     }
@@ -118,7 +134,7 @@ public class Deck {
     public void seqNth(EvaluationContext context) throws ExecException {
 	DataStack stack = context.getDataStack();
         
-	int index = ((Num) stack.pop()).value.intValue();
+	int index = (int) ((Num) stack.pop()).value;
 
 	((Seq) stack.top()).nth(index).eval(context);
     }
@@ -126,7 +142,7 @@ public class Deck {
     public void seqQnth(EvaluationContext context) throws ExecException {
 	DataStack stack = context.getDataStack();
         
-	int index = ((Num) stack.pop()).value.intValue();
+	int index = (int) ((Num) stack.pop()).value;
 
 	stack.push(
 	    new Str(((Function) ((Vec) stack.top()).value[index]).getSymbol())
@@ -137,7 +153,7 @@ public class Deck {
 	DataStack stack = context.getDataStack();
 
 	Box value = stack.pop();
-	int index = ((Num) stack.pop()).value.intValue();
+	int index = (int) ((Num) stack.pop()).value;
 
 	((Seq) stack.top()).set(index, value);
     }
@@ -146,7 +162,7 @@ public class Deck {
 	DataStack stack = context.getDataStack();
 
 	Str symbol = (Str) stack.pop();
-	int index = ((Num) stack.pop()).value.intValue();
+	int index = (int) ((Num) stack.pop()).value;
 
 	((Vec) stack.top()).value[index] = new Function(symbol.value);
     }
@@ -203,7 +219,7 @@ public class Deck {
 
 	while (true) {
 	    Token token = tokenizer.nextToken();
-	    String symbol = token.getSymbol();
+	    String symbol = new String(token.getSymbol());
 
 	    if ("]".equals(symbol)) {
 		return new Vec(tokens);

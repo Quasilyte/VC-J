@@ -7,15 +7,15 @@ import vc.lang.impl.deck.ExecutableCard;
 import vc.lang.runtime.ExecException;
 
 public class Function extends Token {
-    private String name;
+    private byte[] name;
     
-    public Function(String name) {
+    public Function(byte[] name) {
 	this.name = name;
     }
     
     @Override
     public void eval(EvaluationContext context) throws ExecException {
-	ExecutableCard card = context.getDeck().cardByKey(name);
+	ExecutableCard card = context.getDeck().cardByKey(new String(name));
 	
 	if (card == null) {
 	    context.exception("undefined function invocation")
@@ -31,12 +31,12 @@ public class Function extends Token {
     }
 
     @Override
-    public String getSymbol() {
+    public byte[] getSymbol() {
 	return name;
     }
 
     public String toString() {
-	return String.format("Function: `%s'", name);
+	return String.format("Function: `%s'", new String(name));
     }
 }
 
