@@ -22,7 +22,7 @@ public class Interpreter extends EvaluationContext {
 	    tokenizer.nextToken().eval(this);
 	}
 	
-	// System.out.println(stack.toString());
+	System.out.println(stack.toString());
     }
     
     @Override

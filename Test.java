@@ -22,7 +22,7 @@ public class Test {
 	// String script = "[32 f 'cx'] len";
 	// String script = "[0 0 0] 0 'foo' set";
 
-	/*
+	
 	InputStream input = new BufferedInputStream(
 	    new FileInputStream("test.vcl")
 	);
@@ -32,34 +32,6 @@ public class Test {
 	new Interpreter(input).eval();
 
 	input.close();
-	*/
-
-
-	long minTs = Long.MAX_VALUE;
-	int n = 0;
-	
-	for (n = 0; n < 10000; ++n) {
-	    long ts = System.nanoTime();
-	    // #BEGIN
-	    
-	    String input = "[1 2] as x 5 as y 5 5 + x y - - + 2 /\n"
-		+ "[foo bar baz quox vert]\n"
-		+ "0 quoted-nth [] [] 'string!!!' 'another string'";
-
-	    Interpreter vcl = new Interpreter(input);
-	    
-	    vcl.eval();
-	    
-	    // #END
-	    ts = System.nanoTime() - ts;
-
-	    if (ts < minTs) {
-		minTs = ts;
-	    }
-	}
-	
-	System.out.printf("runtime: %s\n", minTs);
-	
     }
 }
 
