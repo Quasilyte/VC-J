@@ -18,4 +18,8 @@ final class CardIdentifier {
     public int hashCode() {
 	return Arrays.hashCode(symbol);
     }
+
+    public String toString() {
+	return new String(symbol);
+    }
 }

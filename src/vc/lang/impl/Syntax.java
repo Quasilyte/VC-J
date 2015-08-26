@@ -18,7 +18,7 @@ public abstract class Syntax {
 	BIN_OP_EQ_KEY = "=".getBytes(),
 	BIN_OP_GT_KEY = ">".getBytes(),
 	BIN_OP_LT_KEY = "<".getBytes(),
-	VEC_LIT_OPEN_KEY = "]".getBytes(),
+	VEC_LIT_OPEN_KEY = "[".getBytes(),
 	EVAL_KEY = "eval".getBytes(),
 	FUNC_REG_KEY = "as".getBytes(),
 	DO_TRUE_KEY = "if".getBytes(),

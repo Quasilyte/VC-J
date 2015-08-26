@@ -19,7 +19,7 @@ public class Function extends Token {
 	
 	if (card == null) {
 	    context.exception("undefined function invocation")
-		.details("name: `%s'", name).toss();
+		.details("name: `%s'", new String(name)).toss();
 	} else {
 	    card.execute(context);
 	}

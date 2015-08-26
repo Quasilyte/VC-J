@@ -225,12 +225,12 @@ public class Deck {
 	    Token token = tokenizer.nextToken();
 	    byte[] symbol = token.getSymbol();
 
-	    if (symbol != null && symbol.length == 1 && symbol[0] == '[') {
+	    if (symbol != null && symbol.length == 1 && symbol[0] == ']') {
 		return new Vec(tokens);
 	    }
 
 	    tokens.add(
-		symbol != null && symbol.length == 1 && symbol[0] == ']'
+		symbol != null && symbol.length == 1 && symbol[0] == '['
 		? vecCollectRecur(tokenizer) : token
 	    );
 	}
