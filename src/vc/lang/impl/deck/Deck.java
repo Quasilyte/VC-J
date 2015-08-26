@@ -219,7 +219,9 @@ public class Deck {
 
 	while (true) {
 	    Token token = tokenizer.nextToken();
-	    String symbol = new String(token.getSymbol());
+	    byte[] bs = token.getSymbol();
+	    
+	    String symbol = bs == null ? "" : new String(bs);
 
 	    if ("]".equals(symbol)) {
 		return new Vec(tokens);
@@ -228,6 +230,7 @@ public class Deck {
 	    tokens.add(
 		"[".equals(symbol) ? vecCollectRecur(tokenizer) : token
 	    );
+	    
 	}
     }
 }
