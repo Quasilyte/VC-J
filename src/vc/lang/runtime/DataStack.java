@@ -19,6 +19,16 @@ public class DataStack {
 	return boxes.pop();
     }
 
+    public Box[] npop(int n) {
+	Box[] popped = new Box[n];
+
+	for (int i = n - 1; i > -1; --i) {
+	    popped[i] = boxes.pop();
+	}
+
+	return popped;
+    }
+
     public Box top() {
 	return boxes.peek();
     }

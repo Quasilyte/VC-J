@@ -20,6 +20,7 @@ public class Interpreter extends EvaluationContext {
 	while (tokenizer.hasTokens()) {
 	    // Interpreter is passed as EvaluationContext
 	    tokenizer.nextToken().eval(this);
+	    // System.out.println(tokenizer.toString());
 	}
 	
 	System.out.println(stack.toString());

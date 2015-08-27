@@ -1,10 +1,9 @@
     { Fix }
 * make line counting in TokenEmitter more robust
-* maybe matcher/pattern in skipUntil in tikenizer can be optimized
-* str must contain Character[] instead of String to be permit mutability
 
     { Consider }
-*
+* compare perfomance of matcher lambda in tokenizer skipUntil and
+  perfomance of other approaches.
 
     { Implement }
 * recursive toString for vectors

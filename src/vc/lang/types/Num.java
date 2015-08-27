@@ -28,8 +28,7 @@ public final class Num extends Box {
 	    return new Str(String.valueOf(value).getBytes());
 	}
     }
-    
-    
+        
     @Override
     public Vec toVec() {
 	return new Vec(new Box[] { this });
@@ -46,19 +45,19 @@ public final class Num extends Box {
     }
 
     public Num add(Num otherNum) {
-	return withNewValue(otherNum.value + value);
+	return new Num(otherNum.value + value);
     }
 
     public Num sub(Num otherNum) {
-	return withNewValue(otherNum.value - value);
+	return new Num(otherNum.value - value);
     }
 
     public Num mul(Num otherNum) {
-	return withNewValue(otherNum.value * value);
+	return new Num(otherNum.value * value);
     }
 
     public Num div(Num otherNum) {
-	return withNewValue(otherNum.value / value);
+	return new Num(otherNum.value / value);
     }
 
     public Num gt(Num otherNum) {
@@ -87,6 +86,12 @@ public final class Num extends Box {
 
     private Num withNewValue(double newValue) {
 	value = newValue;
+
+	/*
+	if (asInt()) {
+	    value = (double) ((int) value);
+	}
+	*/
 
 	return this;
     }

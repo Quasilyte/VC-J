@@ -56,18 +56,17 @@ public class Deck {
 	return cards.get(new CardIdentifier(key));
     }
 
-    // n, fmt; take n elems, parse fmt
     public void stackShake(EvaluationContext context)
     throws ExecException {
 	DataStack stack = context.getDataStack();
 
 	int n = (int) ((Num) stack.pop()).value;
-	// char[] fmt = ((Str) stack.pop()).value.chars();
-	/*
-	for (char c : fmt) {
-	    
+	byte[] fmt = ((Str) stack.pop()).value;
+	Box[] popped = stack.npop(n);
+
+	for (byte c : fmt) {
+	    stack.push(popped[c - '0']);
 	}
-	*/
     }
 
     public void evalToken(EvaluationContext context)

@@ -5,31 +5,26 @@ import java.io.InputStream;
 import vc.lang.impl.*;
 import vc.lang.runtime.*;
 
+/*
+['00' 1 shake] as dup
+['10' 2 shake] as swap
+
+[dup 10000000 < if 1 + loop] as loop
+
+0 loop endif
+
+a + b = push((Num) pop.v + (Num) pop.v) => 53
+ */
+
 public class Test {
-    public static void main(String[] args) throws Exception {
-	/*
-	String script = "[1 2 3] '#three' bind\n"
-	              + "[three three] '#three-2' bind\n"
-	              + "three-2";
-	*/
-
-	// String script = "'' if 'true' else 'false' endif 'always'";
-
-	// String script = "123 str! 123.7 str!";
-	// String script = "'123' num!";
-	// String script = "1 vec! [1] vec!";
-
-	// String script = "[32 f 'cx'] len";
-	// String script = "[0 0 0] 0 'foo' set";
-
-	
+    public static void main(String[] args) throws Exception {	
 	InputStream input = new BufferedInputStream(
 	    new FileInputStream("test.vcl")
 	);
 
-	
-	 
+	long ts = System.currentTimeMillis() / 100;
 	new Interpreter(input).eval();
+	System.out.println((System.currentTimeMillis() / 100) - ts);
 
 	input.close();
     }

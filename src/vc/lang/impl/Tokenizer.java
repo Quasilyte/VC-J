@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayDeque;
 
-import vc.lang.types.Token;
+import vc.lang.types.*;
 import vc.lang.runtime.ExecException;
 
 public class Tokenizer {
@@ -82,6 +82,23 @@ public class Tokenizer {
 		.details("scan pattern: `%s'", pattern)
 		.toss();
 	}
+    }
+
+    public String toString() {
+	StringBuilder dump = new StringBuilder();
+
+	dump.append("Tokeks: ");
+	
+	for (Token token : stock) {
+	    byte[] symbol = token.getSymbol();
+	    dump.append(symbol == null
+			? "#"
+			: new String(symbol));
+	    dump.append(' ');
+
+	}
+
+	return dump.toString();
     }
 
     /*
